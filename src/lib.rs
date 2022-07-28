@@ -183,18 +183,16 @@ impl NBABetsDate {
         self.bets.insert(&SEASON.to_string(), &bets_by_day);
     }
 
-    
-    
-
     // View Methods
+    
     pub fn get_all_bets(&self ) -> Vec<NBABet> {
         self.bets.get(&SEASON.to_string()).unwrap_or(vec![])
     }
-
+    
     pub fn get_bet_index_by_id(&self, id: i64 ) -> usize {
         self.get_all_bets().iter().position(|x| x.id == id).unwrap()
     }
-
+    
     pub fn get_bet_by_id(&self, id: i64 ) -> NBABet{
         self.get_all_bets().into_iter().filter(|x| x.id == id).nth(0).unwrap().clone()
     }
@@ -202,6 +200,14 @@ impl NBABetsDate {
     // Returns a vector of all bets that do not have a better and contract is not locked.
     pub fn get_all_open_bets(&self) -> Vec<NBABet>{
         self.get_all_bets().into_iter().filter(|x| x.better_found == false && x.contract_locked == false).collect::<Vec<NBABet>>()
+    }
+
+    pub fn get_bets_by_account(&self, lookup_account: String) -> Vec<NBABet>{
+        self.get_all_bets().into_iter().filter(|x| x.market_maker_id.to_string() == lookup_account || x.better.as_ref().unwrap().to_string() == lookup_account).collect::<Vec<NBABet>>()
+    }
+
+    pub fn get_open_bets_by_game_id(&self, game_id: String) -> Vec<NBABet>{
+        self.get_all_bets().into_iter().filter(|x| x.game_id == game_id && x.better_found == false).collect::<Vec<NBABet>>()
     }
 }
 
