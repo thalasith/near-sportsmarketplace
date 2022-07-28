@@ -1,4 +1,4 @@
 #!/bin/bash
 set -e
 
-cargo test -- --nocapture
+cargo test -- --nocapture --color=always
