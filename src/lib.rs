@@ -4,7 +4,6 @@ use serde::{Deserialize, Serialize};
 
 const SEASON:&str = "2021";
 
-// Define the contract structure
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize, Clone, Debug)]
 pub struct NBABet {
@@ -113,6 +112,7 @@ impl NBABetsDate {
         Promise::new(bet.better.unwrap()).transfer(bet.better_deposit.0)
     }
 
+
     pub fn cancel_bet(&mut self, id:i64) {
         let bet = self.get_bet_by_id(id);
         assert!(bet.paid_out == false, "This bet as already been paid out.");
@@ -135,6 +135,7 @@ impl NBABetsDate {
         Promise::new(winner).transfer(payout)
     }
 
+    // Make private eventually but make a for loop to iterate through all bets.
     // This function needs to be reviewed. I think we can make this more efficient.
     pub fn payout_bet(&mut self, id: i64, winning_team: String) {
         let mut bet = self.get_bet_by_id(id);
@@ -171,6 +172,7 @@ impl NBABetsDate {
     }
 
     // Lock contract
+    // Make private eventually but make a for loop to iterate through all bets.
     pub fn lock_contract(&mut self, id: i64) {
         let mut bet = self.get_bet_by_id(id);
         bet.contract_locked = true;
