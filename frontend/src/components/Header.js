@@ -22,7 +22,7 @@ const Header = ({ currentUser, signIn, signOut }) => {
   return (
     <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 bg-black mb-3">
       <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
-        <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
+        <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start text-white">
           NBA Sports Marketplace
         </div>
         <button
@@ -30,7 +30,7 @@ const Header = ({ currentUser, signIn, signOut }) => {
           type="button"
           onClick={() => setNavbarOpen(!navbarOpen)}
         >
-          Test
+          Menu
         </button>
         <div
           className={
