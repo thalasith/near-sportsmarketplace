@@ -36,7 +36,12 @@ async function initContract() {
     nearConfig.contractName,
     {
       // View methods are read-only, they don't modify the state but usually return some value
-      viewMethods: ["get_all_bets", "get_bet_index_by_id", "get_all_open_bets"],
+      viewMethods: [
+        "get_all_bets",
+        "get_bet_index_by_id",
+        "get_all_open_bets",
+        "get_bets_by_account",
+      ],
       // Change methods can modify the state, but you don't receive the returned value when called
       changeMethods: [
         "new",

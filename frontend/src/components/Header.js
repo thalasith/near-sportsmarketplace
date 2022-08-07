@@ -51,9 +51,9 @@ const Header = ({ currentUser, signIn, signOut }) => {
             <li className="nav-item">
               <a
                 className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
-                href="/make_bet"
+                href="/users_bets"
               >
-                <span className="ml-2">Make a Bet</span>
+                <span className="ml-2">Your Bets</span>
               </a>
             </li>
             <li className="nav-item">

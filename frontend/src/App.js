@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import BetForm from "./components/BetForm";
+import UsersBets from "./components/UsersBets";
 import OpenBets from "./components/OpenBets";
 import Header from "./components/Header";
 
@@ -30,7 +30,11 @@ function App({ contract, currentUser, nearConfig, wallet }) {
           path="/"
           element={<OpenBets currentUser={currentUser} contract={contract} />}
         />
-        <Route exact path="/make_bet" element={<BetForm />} />
+        <Route
+          exact
+          path="/users_bets"
+          element={<UsersBets currentUser={currentUser} contract={contract} />}
+        />
       </Routes>
     </BrowserRouter>
   );
