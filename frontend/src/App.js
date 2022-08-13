@@ -3,7 +3,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import UsersBets from "./components/UsersBets";
 import OpenBets from "./components/OpenBets";
+import Home from "./components/Home";
 import Header from "./components/Header";
+import Games from "./components/Games";
 
 function App({ contract, currentUser, nearConfig, wallet }) {
   const signIn = (e) => {
@@ -25,9 +27,15 @@ function App({ contract, currentUser, nearConfig, wallet }) {
     <BrowserRouter>
       <Header currentUser={currentUser} signIn={signIn} signOut={signOut} />
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route
           exact
-          path="/"
+          path="/games"
+          element={<Games currentUser={currentUser} contract={contract} />}
+        />
+        <Route
+          exact
+          path="/open_bets"
           element={<OpenBets currentUser={currentUser} contract={contract} />}
         />
         <Route

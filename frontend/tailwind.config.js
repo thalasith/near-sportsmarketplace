@@ -2,6 +2,9 @@
 module.exports = {
   content: ["./src/**/*.{html,js}"],
   theme: {
+    variants: {
+      width: ["responsive", "hover", "focus"],
+    },
     extend: {
       height: {
         64: "16rem",

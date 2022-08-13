@@ -42,7 +42,7 @@ const UsersBets = ({ contract, currentUser }) => {
       setUsersBets(allUsersBets);
     };
     getBets();
-  }, []);
+  }, [contract, currentUser.accountId]);
 
   const handleCancelBet = async (betId) => {
     const newUsersBets = usersBets.filter((bet) => bet.id !== betId);
