@@ -6,6 +6,7 @@ import OpenBets from "./components/OpenBets";
 import Home from "./components/Home";
 import Header from "./components/Header";
 import Games from "./components/Games";
+import GameBets from "./components/GameBets";
 
 function App({ contract, currentUser, nearConfig, wallet }) {
   const signIn = (e) => {
@@ -42,6 +43,10 @@ function App({ contract, currentUser, nearConfig, wallet }) {
           exact
           path="/users_bets"
           element={<UsersBets currentUser={currentUser} contract={contract} />}
+        />
+        <Route
+          path="games/:gameDate/:gameId"
+          element={<GameBets currentUser={currentUser} contract={contract} />}
         />
       </Routes>
     </BrowserRouter>

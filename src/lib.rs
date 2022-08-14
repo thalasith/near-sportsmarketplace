@@ -211,6 +211,10 @@ impl NBABetsDate {
     pub fn get_open_bets_by_game_id(&self, game_id: String) -> Vec<NBABet>{
         self.get_all_bets().into_iter().filter(|x| x.game_id == game_id && x.better_found == false).collect::<Vec<NBABet>>()
     }
+
+    pub fn get_bets_by_game_id(&self, game_id: String) -> Vec<NBABet>{
+        self.get_all_bets().into_iter().filter(|x| x.game_id == game_id).collect::<Vec<NBABet>>()
+    }
 }
 
 

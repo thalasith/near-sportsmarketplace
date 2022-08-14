@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MdArrowForwardIos, MdArrowBackIosNew } from "react-icons/md";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import GameButton from "./GameButton";
 
 const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const monthNames = [
@@ -124,33 +125,15 @@ const Games = () => {
       <div className="grid lg:grid-cols-3 py-5 ">
         {shownGames.map((game) => {
           return (
-            <button
-              className="grid grid-cols-2 grid-rows-2 w-48 mx-2 my-2 hover:bg-gray-200 rounded"
+            <GameButton
               key={game.gameId}
-            >
-              <div className="float-left w-5/8 pl-2 pt-1">
-                <img
-                  src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${game.hTeam.triCode.toLowerCase()}.png`}
-                  width="25"
-                  className="float-left"
-                />
-                {game.hTeam.triCode}
-              </div>
-              <div className="text-right w-2/8 pr-2 pt-1">
-                {game.hTeam.score}
-              </div>
-              <div className="float-left w-5/8 pl-2 pb-1">
-                <img
-                  src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${game.vTeam.triCode.toLowerCase()}.png`}
-                  width="25"
-                  className="float-left"
-                />
-                {game.vTeam.triCode}
-              </div>
-              <div className="text-right w-2/8 pr-2 pb-1">
-                {game.vTeam.score}
-              </div>
-            </button>
+              gameId={game.gameId}
+              gameDate={game.homeStartDate}
+              hTeam={game.hTeam.triCode}
+              vTeam={game.vTeam.triCode}
+              hTeamScore={game.hTeam.score}
+              vTeamScore={game.vTeam.score}
+            />
           );
         })}
       </div>

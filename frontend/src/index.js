@@ -41,6 +41,7 @@ async function initContract() {
         "get_bet_index_by_id",
         "get_all_open_bets",
         "get_bets_by_account",
+        "get_bets_by_game_id",
       ],
       // Change methods can modify the state, but you don't receive the returned value when called
       changeMethods: [

@@ -109,6 +109,7 @@ const OpenBets = ({ currentUser, contract }) => {
             <div className="flex flex-col col-span-3 mx-auto">
               <img
                 src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${bet.bidder_team.toLowerCase()}.png`}
+                alt={`${bet.bidder_team} Team Logo`}
                 width="75"
               />
               <p className="mx-auto">{bet.bidder_team}</p>
@@ -116,6 +117,7 @@ const OpenBets = ({ currentUser, contract }) => {
             <div className="flex flex-col col-span-3 mx-auto">
               <img
                 src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${bet.market_maker_team.toLowerCase()}.png`}
+                alt={`${bet.market_maker_team} Team Logo`}
                 width="75"
               />
               <p className="mx-auto ">{bet.market_maker_team}</p>
