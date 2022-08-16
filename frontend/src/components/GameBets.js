@@ -4,6 +4,7 @@ import useWindowDimensions from "../utils/useWindowDimensions";
 import GameBetsModal from "./GameBetsModal";
 import * as nearAPI from "near-api-js";
 import { MdArrowLeft, MdArrowRight } from "react-icons/md";
+import getTeamFormatter from "../utils/getTeamFormatter";
 
 const {
   utils: {
@@ -167,7 +168,9 @@ const GameBets = ({ currentUser, contract }) => {
             className="float-right"
           />
           <div className="float-right">
-            <p className="text-lg ">{gameData.hTeamTriCode}</p>
+            <p className="text-lg ">
+              {getTeamFormatter(gameData.hTeamTriCode)}
+            </p>
             <p className="text-sm float-right">{gameData.hTeamRecord}</p>
           </div>
         </div>
@@ -175,13 +178,13 @@ const GameBets = ({ currentUser, contract }) => {
           <div className="flex flex-col basis-1/5 items-center px-2">
             <p>{gameData.gameEnded ? "Final" : "Not Final"}</p>
             <table className="table-auto text-sm border-collapse border-gray-400">
-              <thead className="border-collapse border border-gray-400">
+              <thead className="border border-b-1 border-l-0  border-t-0 border-r-0  border-gray-400">
                 <tr>
                   <th className="lg:pr-24"></th>
-                  <th className="lg:px-4">1</th>
-                  <th className="lg:px-4">2</th>
-                  <th className="lg:px-4 text-center">3</th>
-                  <th className="lg:px-4 text-center">4</th>
+                  <th className="lg:px-4 font-normal ">1</th>
+                  <th className="lg:px-4 font-normal ">2</th>
+                  <th className="lg:px-4 font-normal ">3</th>
+                  <th className="lg:px-4 font-normal ">4</th>
                   <th className="text-center">T</th>
                 </tr>
               </thead>
@@ -226,7 +229,7 @@ const GameBets = ({ currentUser, contract }) => {
             className="float-left"
           />
           <div className="float-left">
-            <p className="text-lg">{gameData.vTeamTriCode}</p>
+            <p className="text-lg">{getTeamFormatter(gameData.vTeamTriCode)}</p>
             <p className="text-sm float-left">{gameData.vTeamRecord}</p>
           </div>
         </div>
@@ -238,7 +241,8 @@ const GameBets = ({ currentUser, contract }) => {
         Add a bet on this game
       </button>
       <div className="text-2xl mb-5">
-        Bets on {gameData.hTeamTriCode} vs {gameData.vTeamTriCode}
+        Bets on {getTeamFormatter(gameData.hTeamTriCode)} vs.{" "}
+        {getTeamFormatter(gameData.vTeamTriCode)}
       </div>
       <div className="grid lg:grid-cols-[repeat(auto-fit,_16.666666%)] lg:w-3/4 w-11/12 py-2 m-auto justify-center ">
         {gameBets.map((bet) => (
@@ -250,7 +254,7 @@ const GameBets = ({ currentUser, contract }) => {
               Initiated by: {capitalizeFirstLetter(bet.market_maker_id)}
             </p>
             <p className="mx-auto">
-              Bet:{" "}
+              You bet{" "}
               <span className="font-bold italic underline">
                 {" "}
                 {formatNearAmount(bet.better_deposit, 2)} N
@@ -267,7 +271,8 @@ const GameBets = ({ currentUser, contract }) => {
                   2
                 )}{" "}
                 N
-              </span>{" "}
+              </span>
+              .
             </p>
 
             <p className="mx-auto">
