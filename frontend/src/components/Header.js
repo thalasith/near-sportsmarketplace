@@ -20,13 +20,13 @@ const Header = ({ currentUser, signIn, signOut }) => {
   const login = <button onClick={signIn}>LOGIN</button>;
 
   return (
-    <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 bg-black mb-3">
-      <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
-        <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start text-white">
+    <nav className="relative mb-3 flex flex-wrap items-center justify-between bg-black px-2 py-3">
+      <div className="container mx-auto flex flex-wrap items-center justify-between px-4">
+        <div className="relative flex w-full justify-between text-white lg:static lg:block lg:w-auto lg:justify-start">
           NBA Sports Marketplace
         </div>
         <button
-          className="text-white cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
+          className="block cursor-pointer rounded border border-solid border-transparent bg-transparent px-3 py-1 text-xl leading-none text-white outline-none focus:outline-none lg:hidden"
           type="button"
           onClick={() => setNavbarOpen(!navbarOpen)}
         >
@@ -34,15 +34,15 @@ const Header = ({ currentUser, signIn, signOut }) => {
         </button>
         <div
           className={
-            "lg:flex flex-grow items-center" +
+            "flex-grow items-center lg:flex" +
             (navbarOpen ? " flex" : " hidden")
           }
           id="example-navbar-danger"
         >
-          <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
+          <ul className="flex list-none flex-col lg:ml-auto lg:flex-row">
             <li className="nav-item">
               <a
-                className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
+                className="flex items-center px-3 py-2 text-xs font-bold uppercase leading-snug text-white hover:opacity-75"
                 href="/games"
               >
                 <span className="ml-2">Games</span>
@@ -50,7 +50,7 @@ const Header = ({ currentUser, signIn, signOut }) => {
             </li>
             <li className="nav-item">
               <a
-                className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
+                className="flex items-center px-3 py-2 text-xs font-bold uppercase leading-snug text-white hover:opacity-75"
                 href="/open_bets"
               >
                 <span className="ml-2">Open Bets</span>
@@ -58,14 +58,14 @@ const Header = ({ currentUser, signIn, signOut }) => {
             </li>
             <li className="nav-item">
               <a
-                className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
+                className="flex items-center px-3 py-2 text-xs font-bold uppercase leading-snug text-white hover:opacity-75"
                 href="/users_bets"
               >
                 <span className="ml-2">Your Bets</span>
               </a>
             </li>
             <li className="nav-item">
-              <div className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75">
+              <div className="flex items-center px-3 py-2 text-xs font-bold uppercase leading-snug text-white hover:opacity-75">
                 {currentUser ? logout : login}
               </div>
             </li>

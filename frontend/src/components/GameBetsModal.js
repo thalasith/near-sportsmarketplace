@@ -85,8 +85,8 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
             <button
               className={`${
                 marketMakerTeam === gameData.hTeamTriCode &&
-                "bg-gray-200 border border-separate border-blue-500"
-              } px-2 py-1 rounded flex flex-col items-center justify-center w-48`}
+                "border-separate border border-blue-500 bg-gray-200"
+              } flex w-48 flex-col items-center justify-center rounded px-2 py-1`}
               onClick={() => handleTeamSelection(gameData.hTeamTriCode)}
             >
               <img
@@ -100,13 +100,13 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
               </p>
             </button>
           </div>
-          <div className="lg:mx-8 sm:mx-5">vs.</div>
+          <div className="sm:mx-5 lg:mx-8">vs.</div>
           <div className="mx-2">
             <button
               className={`${
                 marketMakerTeam === gameData.vTeamTriCode &&
-                "bg-gray-200 border border-separate border-blue-500"
-              } px-2 py-1 rounded flex flex-col items-center justify-center w-48`}
+                "border-separate border border-blue-500 bg-gray-200"
+              } flex w-48 flex-col items-center justify-center rounded px-2 py-1`}
               onClick={() => handleTeamSelection(gameData.vTeamTriCode)}
             >
               <img
@@ -132,17 +132,17 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
   // Stage === 3
   const ReviewSelection = () => {
     return (
-      <div className="pt-2 px-20 ">
-        <h3 className="text-2xl py-1 text-black font-bold">
+      <div className="px-20 pt-2 ">
+        <h3 className="py-1 text-2xl font-bold text-black">
           Review your bet information:
         </h3>
-        <p className="text-xl py-1 text-gray-500">
+        <p className="py-1 text-xl text-gray-500">
           1. The winner will get{" "}
           <span className="font-bold text-black">
             {payOutFromAmericanOdds(marketMakerDeposit, americanOdds)} N.
           </span>
         </p>
-        <p className="text-xl py-1 text-gray-500">
+        <p className="py-1 text-xl text-gray-500">
           2. You are betting{" "}
           <span className="font-bold text-black">{marketMakerDeposit} N</span>{" "}
           on{" "}
@@ -152,7 +152,7 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
           Your odds are{" "}
           <span className="font-bold text-black">+{americanOdds}.</span>
         </p>
-        <p className="text-xl py-1 text-gray-500">
+        <p className="py-1 text-xl text-gray-500">
           3. Your opponent will be betting{" "}
           <span className="font-bold text-black">
             {payOutFromAmericanOdds(marketMakerDeposit, americanOdds) -
@@ -173,7 +173,7 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
           </span>
           .
         </p>
-        <p className="text-xl py-1 text-gray-500">
+        <p className="py-1 text-xl text-gray-500">
           4. If an opponent is found, you have{" "}
           <span className="font-bold text-black">2 hours</span> before tip-off
           to cancel the bet.
@@ -196,34 +196,34 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
 
   if (!visible) return null;
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center ">
-      <div className="bg-white p-2 rounded lg:w-1/2 lg:h-96 w-96 h-2/3 relative top-0">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-25 backdrop-blur-sm ">
+      <div className="relative top-0 h-2/3 w-96 rounded bg-white p-2 lg:h-96 lg:w-1/2">
         <GrClose
           className="float-right fill-red-500"
           onClick={() => onClose()}
         />
         <div className="border-b-2 pb-4 pt-2">
-          <div className="uppercase tracking-wide text-xs font-bold text-gray-500 mb-1 leading-tight">
+          <div className="mb-1 text-xs font-bold uppercase leading-tight tracking-wide text-gray-500">
             Step {formStage} of 3
           </div>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div className="flex-1">
               <div>
-                <div className="text-lg font-bold text-gray-700 leading-tight">
+                <div className="text-lg font-bold leading-tight text-gray-700">
                   {formStage === 1 && "Select your Team"}
                   {formStage === 2 && "Make your Bet"}
                   {formStage === 3 && "Review Bet"}
                 </div>
               </div>
             </div>
-            <div className="flex items-center w-72">
-              <div className="w-full bg-gray-200 rounded-full mr-2">
+            <div className="flex w-72 items-center">
+              <div className="mr-2 w-full rounded-full bg-gray-200">
                 <div
-                  className="rounded-full bg-blue-500 text-xs leading-none h-2 text-center text-white"
+                  className="h-2 rounded-full bg-blue-500 text-center text-xs leading-none text-white"
                   style={{ width: (formStage / 3) * 100 + "%" }}
                 ></div>
               </div>
-              <div className="text-xs w-10 text-gray-600">
+              <div className="w-10 text-xs text-gray-600">
                 {Math.round((100 * formStage) / 3)}%
               </div>
             </div>
@@ -246,7 +246,7 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
                     type="number"
                     name="marketMakerDeposit"
                     id="marketMakerDeposit"
-                    className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 border-solid border  block w-full sm:text-sm rounded-md pl-4 py-2"
+                    className="block w-full rounded-md border border-solid border-gray-300  py-2 pl-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder="Amount you will bet"
                     onChange={(e) => setMarketMakerDeposit(e.target.value)}
                     value={marketMakerDeposit}
@@ -260,7 +260,7 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
                 </label>
                 <div className="py-2">
                   <input
-                    className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 border-solid border  block w-full sm:text-sm rounded-md pl-4 py-2"
+                    className="block w-full rounded-md border border-solid border-gray-300  py-2 pl-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     type="number"
                     name="marketMakerDeposit"
                     onChange={(e) => setAmericanOdds(e.target.value)}
@@ -272,13 +272,13 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
           </div>
         )}
         {formStage === 3 && <ReviewSelection />}
-        <div className="absolute bottom-0 inset-x-0 pb-5">
-          <div className="max-w-3xl mx-auto px-4">
+        <div className="absolute inset-x-0 bottom-0 pb-5">
+          <div className="mx-auto max-w-3xl px-4">
             <div className="flex justify-between">
               <div className="w-1/2">
                 {formStage !== 1 && (
                   <button
-                    className="w-32 focus:outline-none py-2 px-5 rounded-lg shadow-sm text-center text-gray-600 bg-white hover:bg-gray-100 font-medium border"
+                    className="w-32 rounded-lg border bg-white py-2 px-5 text-center font-medium text-gray-600 shadow-sm hover:bg-gray-100 focus:outline-none"
                     onClick={() => handlePrevious()}
                   >
                     Previous
@@ -289,14 +289,14 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
               <div className="w-1/2 text-right">
                 {formStage === 3 ? (
                   <button
-                    className="w-32 focus:outline-none border border-transparent py-2 px-5 rounded-lg shadow-sm text-center text-white bg-blue-500 hover:bg-blue-600 font-medium"
+                    className="w-32 rounded-lg border border-transparent bg-blue-500 py-2 px-5 text-center font-medium text-white shadow-sm hover:bg-blue-600 focus:outline-none"
                     onClick={() => handleSubmitBet()}
                   >
                     Complete
                   </button>
                 ) : (
                   <button
-                    className="w-32 focus:outline-none border border-transparent py-2 px-5 rounded-lg shadow-sm text-center text-white bg-blue-500 hover:bg-blue-600 font-medium"
+                    className="w-32 rounded-lg border border-transparent bg-blue-500 py-2 px-5 text-center font-medium text-white shadow-sm hover:bg-blue-600 focus:outline-none"
                     onClick={() => handleNext()}
                   >
                     Next

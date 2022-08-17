@@ -12,10 +12,10 @@ const GameButton = ({
   const GameDiv = () => {
     return (
       <a
-        className="grid grid-cols-2 grid-rows-2 w-48 mx-2 my-2 hover:bg-gray-200 rounded"
+        className="mx-2 my-2 grid w-48 grid-cols-2 grid-rows-2 rounded hover:bg-gray-200"
         href={`/games/${gameDate}/${gameId}`}
       >
-        <div className="float-left w-5/8 pl-2 pt-1">
+        <div className="w-5/8 float-left pl-2 pt-1">
           <img
             src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${vTeam.toLowerCase()}.png`}
             alt={`${vTeam} Team Logo`}
@@ -26,9 +26,9 @@ const GameButton = ({
         </div>
 
         <div
-          className={`place-items-end justify-self-end w-2/8 pr-2 pt-1 text-gray-500 ${
+          className={`w-2/8 place-items-end justify-self-end pr-2 pt-1 text-gray-500 ${
             parseInt(hTeamScore) < parseInt(vTeamScore) &&
-            "text-black font-semibold"
+            "font-semibold text-black"
           }`}
         >
           {parseInt(hTeamScore) < parseInt(vTeamScore) && (
@@ -36,7 +36,7 @@ const GameButton = ({
           )}
           {vTeamScore}
         </div>
-        <div className="float-left w-5/8 pl-2 pb-1">
+        <div className="w-5/8 float-left pl-2 pb-1">
           <img
             src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${hTeam.toLowerCase()}.png`}
             alt={`${hTeam} Team Logo`}
@@ -46,9 +46,9 @@ const GameButton = ({
           {hTeam}
         </div>
         <div
-          className={`place-items-end justify-self-end w-2/8 pr-2 pt-1 text-gray-500 ${
+          className={`w-2/8 place-items-end justify-self-end pr-2 pt-1 text-gray-500 ${
             parseInt(hTeamScore) > parseInt(vTeamScore) &&
-            "text-black font-semibold"
+            "font-semibold text-black"
           }`}
         >
           {parseInt(hTeamScore) > parseInt(vTeamScore) && (
@@ -63,10 +63,10 @@ const GameButton = ({
   const GamePostponed = () => {
     return (
       <a
-        className="grid grid-cols-2 grid-rows-2 w-48 mx-2 my-2 hover:bg-gray-200 rounded"
+        className="mx-2 my-2 grid w-48 grid-cols-2 grid-rows-2 rounded hover:bg-gray-200"
         href={`/games/${gameDate}/${gameId}`}
       >
-        <div className="float-left w-5/8 pl-2 pt-1">
+        <div className="w-5/8 float-left pl-2 pt-1">
           <img
             src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${hTeam.toLowerCase()}.png`}
             alt={`${hTeam} Team Logo`}
@@ -76,10 +76,10 @@ const GameButton = ({
           {hTeam}
         </div>
 
-        <div className="row-span-2 text-right my-auto w-2/8 pr-2 pt-1">
+        <div className="w-2/8 row-span-2 my-auto pr-2 pt-1 text-right">
           Postponed
         </div>
-        <div className="float-left w-5/8 pl-2 pb-1">
+        <div className="w-5/8 float-left pl-2 pb-1">
           <img
             src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${vTeam.toLowerCase()}.png`}
             alt={`${vTeam} Team Logo`}

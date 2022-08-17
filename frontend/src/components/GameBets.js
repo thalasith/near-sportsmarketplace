@@ -5,6 +5,7 @@ import GameBetsModal from "./GameBetsModal";
 import * as nearAPI from "near-api-js";
 import { MdArrowLeft, MdArrowRight } from "react-icons/md";
 import getTeamFormatter from "../utils/getTeamFormatter";
+import { parseNearAmount } from "near-api-js/lib/utils/format";
 
 const {
   utils: {
@@ -59,7 +60,7 @@ const GameBets = ({ currentUser, contract }) => {
   });
   const [gameBets, setGameBets] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-
+  console.log(gameBets);
   const handleModalClose = () => {
     setModalVisible(false);
   };
@@ -147,13 +148,13 @@ const GameBets = ({ currentUser, contract }) => {
   }, [gameDate, gameId, contract]);
 
   return (
-    <div className="flex flex-col items-center w-full">
-      <div className="flex flex-row items-center lg:w-7/12 w-11/12 bg-gray-200 py-2 ">
-        <div className="lg:basis-1/3 basis-1/2 pr-2">
+    <div className="flex w-full flex-col items-center">
+      <div className="flex w-11/12 flex-row items-center bg-gray-200 py-2 lg:w-7/12 ">
+        <div className="basis-1/2 pr-2 lg:basis-1/3">
           <p
             className={`float-right text-2xl text-gray-500 ${
               parseInt(gameData.hTeamScore) < parseInt(gameData.vTeamScore) &&
-              "text-black font-bold"
+              "font-bold text-black"
             }`}
           >
             {gameData.vTeamScore}{" "}
@@ -171,20 +172,20 @@ const GameBets = ({ currentUser, contract }) => {
             <p className="text-lg ">
               {getTeamFormatter(gameData.vTeamTriCode)}
             </p>
-            <p className="text-sm float-right">{gameData.vTeamRecord}</p>
+            <p className="float-right text-sm">{gameData.vTeamRecord}</p>
           </div>
         </div>
         {width > 768 && (
-          <div className="flex flex-col basis-1/5 items-center px-2">
+          <div className="flex basis-1/5 flex-col items-center px-2">
             <p>{gameData.gameEnded ? "Final" : "Not Final"}</p>
-            <table className="table-auto text-sm border-collapse border-gray-400">
-              <thead className="border border-b-1 border-l-0  border-t-0 border-r-0  border-gray-400">
+            <table className="table-auto border-collapse border-gray-400 text-sm">
+              <thead className="border-b-1 border border-l-0  border-t-0 border-r-0  border-gray-400">
                 <tr>
                   <th className="lg:pr-24"></th>
-                  <th className="lg:px-4 font-normal ">1</th>
-                  <th className="lg:px-4 font-normal ">2</th>
-                  <th className="lg:px-4 font-normal ">3</th>
-                  <th className="lg:px-4 font-normal ">4</th>
+                  <th className="font-normal lg:px-4 ">1</th>
+                  <th className="font-normal lg:px-4 ">2</th>
+                  <th className="font-normal lg:px-4 ">3</th>
+                  <th className="font-normal lg:px-4 ">4</th>
                   <th className="text-center">T</th>
                 </tr>
               </thead>
@@ -210,11 +211,11 @@ const GameBets = ({ currentUser, contract }) => {
           </div>
         )}
 
-        <div className="lg:basis-1/3 basis-1/2 pl-2">
+        <div className="basis-1/2 pl-2 lg:basis-1/3">
           <p
             className={`float-left text-2xl text-gray-500 ${
               parseInt(gameData.hTeamScore) > parseInt(gameData.vTeamScore) &&
-              "text-black font-bold"
+              "font-bold text-black"
             }`}
           >
             {parseInt(gameData.hTeamScore) > parseInt(gameData.vTeamScore) && (
@@ -230,61 +231,102 @@ const GameBets = ({ currentUser, contract }) => {
           />
           <div className="float-left">
             <p className="text-lg">{getTeamFormatter(gameData.hTeamTriCode)}</p>
-            <p className="text-sm float-left">{gameData.hTeamRecord}</p>
+            <p className="float-left text-sm">{gameData.hTeamRecord}</p>
           </div>
         </div>
       </div>
       <button
-        className="text-xl my-2 bg-gray-300 rounded p-1"
+        className={
+          "my-2 flex flex-col items-center justify-center rounded bg-blue-500 px-2 py-1 text-xl text-white hover:bg-blue-700 "
+        }
         onClick={() => setModalVisible(true)}
       >
         Add a bet on this game
       </button>
-      <div className="text-2xl mb-5">
+      <div className="mb-5 text-2xl">
         Bets on {getTeamFormatter(gameData.hTeamTriCode)} vs.{" "}
         {getTeamFormatter(gameData.vTeamTriCode)}
       </div>
-      <div className="grid lg:grid-cols-[repeat(auto-fit,_16.666666%)] lg:w-3/4 w-11/12 py-2 m-auto justify-center ">
+      <div className="m-auto grid w-11/12 justify-center py-2 lg:w-3/4 lg:grid-cols-[repeat(auto-fit,_16.666666%)] ">
         {gameBets.map((bet) => (
           <div
             key={bet.id}
-            className="lg:col-span-2 rounded-md bg-gray-100 border-2 border-black px-2 m-auto my-2"
+            className="m-auto my-2 w-full rounded-md border-2 border-gray-300 bg-gray-200 px-2 lg:col-span-2 lg:w-2/3"
           >
-            <p className="mx-auto">
-              Initiated by: {capitalizeFirstLetter(bet.market_maker_id)}
-            </p>
-            <p className="mx-auto">
-              You bet{" "}
-              <span className="font-bold italic underline">
-                {" "}
-                {formatNearAmount(bet.better_deposit, 2)} N
-              </span>{" "}
-              on {bet.bidder_team} to win{" "}
-              <span className="font-bold italic underline">
-                {formatNearAmount(
-                  (
+            <div className="flex border-separate flex-col items-center justify-between border border-b-2 border-t-0 border-l-0 border-r-0 border-gray-700">
+              <p>
+                <span
+                  className={`${
+                    bet.bidder_team === gameData.vTeamTriCode
+                      ? "font-bold text-black"
+                      : "text-gray-700"
+                  }`}
+                >
+                  {gameData.vTeamTriCode}
+                </span>{" "}
+                vs{" "}
+                <span
+                  className={`${
+                    bet.bidder_team === gameData.hTeamTriCode
+                      ? "font-bold text-black"
+                      : "text-gray-700"
+                  }`}
+                >
+                  {gameData.hTeamTriCode}
+                </span>
+              </p>
+              <img
+                src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${bet.bidder_team.toLocaleLowerCase()}.png`}
+                alt={`${bet.bidder_team} Team Logo`}
+                width="75"
+                className=""
+              />
+            </div>
+            <div className="grid grid-cols-2 grid-rows-2 text-gray-700">
+              <div className="flex flex-col pl-3 text-start">
+                <p className="">Odds</p>
+                <p className="font-bold text-black">
+                  {americanOddsCalculator(
+                    parseInt(bet.better_deposit),
                     parseInt(bet.better_deposit) +
-                    parseInt(bet.market_maker_deposit)
-                  ).toLocaleString("en-US", {
-                    useGrouping: false,
-                  }),
-                  2
-                )}{" "}
-                N
-              </span>
-              .
-            </p>
-
-            <p className="mx-auto">
-              Odds:{" "}
-              <span className="font-bold italic underline">
-                {americanOddsCalculator(
-                  parseInt(bet.better_deposit),
-                  parseInt(bet.better_deposit) +
-                    parseInt(bet.market_maker_deposit)
-                )}
-              </span>
-            </p>
+                      parseInt(bet.market_maker_deposit)
+                  )}{" "}
+                  on {bet.bidder_team}
+                </p>
+              </div>
+              <div className="flex flex-col pr-3 text-end">
+                <p className="">Total Pot</p>
+                <p className="font-bold text-black">
+                  {formatNearAmount(
+                    (
+                      parseInt(bet.better_deposit) +
+                      parseInt(bet.market_maker_deposit)
+                    ).toLocaleString("en-US", {
+                      useGrouping: false,
+                    }),
+                    2
+                  )}{" "}
+                  N
+                </p>
+              </div>
+              <div className="flex flex-col p-3 text-start">
+                <p className="pt-1">
+                  You pay:{" "}
+                  <span className="font-bold text-black">
+                    {formatNearAmount(bet.better_deposit)} N
+                  </span>
+                </p>
+              </div>
+              <div className="flex flex-col p-3 text-start">
+                <button
+                  className={
+                    "flex flex-col items-center justify-center rounded bg-blue-500 px-2 py-1 text-white hover:bg-blue-700 "
+                  }
+                >
+                  Accept Bet
+                </button>
+              </div>
+            </div>
           </div>
         ))}
       </div>

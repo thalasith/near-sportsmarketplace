@@ -93,7 +93,7 @@ const Games = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="flex w-full flex-col items-center">
       <div className="flex flex-row items-center" ref={parent}>
         <button>
           <MdArrowBackIosNew onClick={handlePreviousWeek} />
@@ -104,12 +104,12 @@ const Games = () => {
               key={date.getDay()}
               className={
                 date.getDay() === shownDay.getDay()
-                  ? "float-left mx-4 hover:bg-gray-200 hover:rounded lg:w-12 w-4 font-bold"
-                  : "float-left mx-4 hover:bg-gray-200 hover:rounded lg:w-12 w-4 "
+                  ? "float-left mx-4 w-4 font-bold hover:rounded hover:bg-gray-200 lg:w-12"
+                  : "float-left mx-4 w-4 hover:rounded hover:bg-gray-200 lg:w-12 "
               }
               onClick={() => handleSetDay(date)}
             >
-              <p className="flex flex-col items-center lg:text-lg text-base font-semibold">
+              <p className="flex flex-col items-center text-base font-semibold lg:text-lg">
                 {weekday[date.getDay()]}
               </p>
               <p className="flex flex-col items-center text-xs">
@@ -123,7 +123,7 @@ const Games = () => {
           <MdArrowForwardIos onClick={handleNextWeek} />
         </button>
       </div>
-      <div className="grid lg:grid-cols-3 py-5 ">
+      <div className="grid py-5 lg:grid-cols-3 ">
         {shownGames.map((game) => {
           return (
             <GameButton

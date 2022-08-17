@@ -52,15 +52,15 @@ const UsersBets = ({ contract, currentUser }) => {
 
   const OpenBets = () => {
     return (
-      <div className="h-56 grid grid-cols-1 md:grid-cols-3 gap-4 w-5/6">
+      <div className="grid h-56 w-5/6 grid-cols-1 gap-4 md:grid-cols-3">
         {usersBets
           .filter((bet) => bet.better_found === false)
           .map((bet) => (
             <div
               key={bet.id}
-              className="grid grid-cols-6 rounded-md bg-gray-100 border-2 border-black align-center"
+              className="align-center grid grid-cols-6 rounded-md border-2 border-black bg-gray-100"
             >
-              <div className=" flex flex-col col-span-6 mx-auto pt-2">
+              <div className=" col-span-6 mx-auto flex flex-col pt-2">
                 <p className="mx-auto">
                   Bet:{" "}
                   <span className="font-bold italic underline">
@@ -75,14 +75,14 @@ const UsersBets = ({ contract, currentUser }) => {
                   Tip Off: {formatDate(bet.start_time_utc)}
                 </h1>
               </div>
-              <div className="flex flex-col col-span-3 mx-auto">
+              <div className="col-span-3 mx-auto flex flex-col">
                 <img
                   src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${bet.bidder_team.toLowerCase()}.png`}
                   width="75"
                 />
                 <p className="mx-auto">{bet.bidder_team}</p>
               </div>
-              <div className="flex flex-col col-span-3 mx-auto">
+              <div className="col-span-3 mx-auto flex flex-col">
                 <img
                   src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${bet.market_maker_team.toLowerCase()}.png`}
                   width="75"
@@ -90,7 +90,7 @@ const UsersBets = ({ contract, currentUser }) => {
                 <p className="mx-auto ">{bet.market_maker_team}</p>
               </div>
 
-              <div className="flex flex-col col-span-3 mx-auto">
+              <div className="col-span-3 mx-auto flex flex-col">
                 <p className="mx-auto"> Total Pot </p>
                 <p className="mx-auto">
                   {formatNearAmount(
@@ -105,7 +105,7 @@ const UsersBets = ({ contract, currentUser }) => {
                   N
                 </p>
               </div>
-              <div className="flex flex-col col-span-3 mx-auto">
+              <div className="col-span-3 mx-auto flex flex-col">
                 <p className="mx-auto"> % Return </p>
                 <p className="mx-auto">
                   {Math.round(
@@ -121,12 +121,12 @@ const UsersBets = ({ contract, currentUser }) => {
               </div>
               <div className="col-span-6 mx-auto mb-2">
                 <button
-                  className="mx-auto bg-green-700 px-2 rounded-md hover:bg-green-500"
+                  className="mx-auto rounded-md bg-green-700 px-2 hover:bg-green-500"
                   onClick={() => handleCancelBet(bet.id)}
                 >
                   Cancel Bet
                 </button>
-                <button className="mx-auto bg-green-700 px-2 rounded-md hover:bg-green-500">
+                <button className="mx-auto rounded-md bg-green-700 px-2 hover:bg-green-500">
                   Payout
                 </button>
               </div>
@@ -138,15 +138,15 @@ const UsersBets = ({ contract, currentUser }) => {
 
   const AcceptedBets = () => {
     return (
-      <div className="h-56 grid grid-cols-1 md:grid-cols-3 gap-4 w-5/6">
+      <div className="grid h-56 w-5/6 grid-cols-1 gap-4 md:grid-cols-3">
         {usersBets
           .filter((bet) => bet.better_found === true)
           .map((bet) => (
             <div
               key={bet.id}
-              className="grid grid-cols-6 rounded-md bg-gray-100 border-2 border-black align-center"
+              className="align-center grid grid-cols-6 rounded-md border-2 border-black bg-gray-100"
             >
-              <div className=" flex flex-col col-span-6 mx-auto pt-2">
+              <div className=" col-span-6 mx-auto flex flex-col pt-2">
                 <p className="mx-auto">
                   Bet:{" "}
                   <span className="font-bold italic underline">
@@ -161,14 +161,14 @@ const UsersBets = ({ contract, currentUser }) => {
                   Tip Off: {formatDate(bet.start_time_utc)}
                 </h1>
               </div>
-              <div className="flex flex-col col-span-3 mx-auto">
+              <div className="col-span-3 mx-auto flex flex-col">
                 <img
                   src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${bet.bidder_team.toLowerCase()}.png`}
                   width="75"
                 />
                 <p className="mx-auto">{bet.bidder_team}</p>
               </div>
-              <div className="flex flex-col col-span-3 mx-auto">
+              <div className="col-span-3 mx-auto flex flex-col">
                 <img
                   src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${bet.market_maker_team.toLowerCase()}.png`}
                   width="75"
@@ -176,7 +176,7 @@ const UsersBets = ({ contract, currentUser }) => {
                 <p className="mx-auto ">{bet.market_maker_team}</p>
               </div>
 
-              <div className="flex flex-col col-span-3 mx-auto">
+              <div className="col-span-3 mx-auto flex flex-col">
                 <p className="mx-auto"> Total Pot </p>
                 <p className="mx-auto">
                   {formatNearAmount(
@@ -191,7 +191,7 @@ const UsersBets = ({ contract, currentUser }) => {
                   N
                 </p>
               </div>
-              <div className="flex flex-col col-span-3 mx-auto">
+              <div className="col-span-3 mx-auto flex flex-col">
                 <p className="mx-auto"> % Return </p>
                 <p className="mx-auto">
                   {Math.round(
@@ -206,7 +206,7 @@ const UsersBets = ({ contract, currentUser }) => {
                 </p>
               </div>
               <div className="col-span-6 mx-auto mb-2">
-                <button className="mx-auto bg-green-700 px-2 rounded-md hover:bg-green-500">
+                <button className="mx-auto rounded-md bg-green-700 px-2 hover:bg-green-500">
                   Cancel Bet
                 </button>
               </div>
@@ -219,15 +219,15 @@ const UsersBets = ({ contract, currentUser }) => {
   return (
     <div className="flex flex-col items-center">
       <h1>Your Bets</h1>
-      <div className="flex flex-col-2 items-center">
+      <div className="flex-col-2 flex items-center">
         <button
-          className="bg-gray-500 rounded px-1 mx-2"
+          className="mx-2 rounded bg-gray-500 px-1"
           onClick={() => setOpenBetsShown(true)}
         >
           Open Bets
         </button>
         <button
-          className="bg-gray-500 rounded px-1 mx-2"
+          className="mx-2 rounded bg-gray-500 px-1"
           onClick={() => setOpenBetsShown(false)}
         >
           Accepted Bets

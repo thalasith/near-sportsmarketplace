@@ -85,13 +85,13 @@ const OpenBets = ({ currentUser, contract }) => {
     <div className="flex flex-col items-center">
       <h1 className="text-xl">Open Bets</h1>
 
-      <div className="h-56 grid grid-cols-1 md:grid-cols-3 gap-4 w-5/6">
+      <div className="grid h-56 w-5/6 grid-cols-1 gap-4 md:grid-cols-3">
         {openBets.map((bet) => (
           <div
             key={bet.id}
-            className="grid grid-cols-6 rounded-md bg-gray-100 border-2 border-black align-center"
+            className="align-center grid grid-cols-6 rounded-md border-2 border-black bg-gray-100"
           >
-            <div className=" flex flex-col col-span-6 mx-auto pt-2">
+            <div className=" col-span-6 mx-auto flex flex-col pt-2">
               <p className="mx-auto">
                 Bet:{" "}
                 <span className="font-bold italic underline">
@@ -106,7 +106,7 @@ const OpenBets = ({ currentUser, contract }) => {
                 Tip Off: {formatDate(bet.start_time_utc)}
               </h1>
             </div>
-            <div className="flex flex-col col-span-3 mx-auto">
+            <div className="col-span-3 mx-auto flex flex-col">
               <img
                 src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${bet.bidder_team.toLowerCase()}.png`}
                 alt={`${bet.bidder_team} Team Logo`}
@@ -114,7 +114,7 @@ const OpenBets = ({ currentUser, contract }) => {
               />
               <p className="mx-auto">{bet.bidder_team}</p>
             </div>
-            <div className="flex flex-col col-span-3 mx-auto">
+            <div className="col-span-3 mx-auto flex flex-col">
               <img
                 src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${bet.market_maker_team.toLowerCase()}.png`}
                 alt={`${bet.market_maker_team} Team Logo`}
@@ -123,7 +123,7 @@ const OpenBets = ({ currentUser, contract }) => {
               <p className="mx-auto ">{bet.market_maker_team}</p>
             </div>
 
-            <div className="flex flex-col col-span-3 mx-auto">
+            <div className="col-span-3 mx-auto flex flex-col">
               <p className="mx-auto"> Total Pot </p>
               <p className="mx-auto">
                 {formatNearAmount(
@@ -138,7 +138,7 @@ const OpenBets = ({ currentUser, contract }) => {
                 N
               </p>
             </div>
-            <div className="flex flex-col col-span-3 mx-auto">
+            <div className="col-span-3 mx-auto flex flex-col">
               <p className="mx-auto"> % Return </p>
               <p className="mx-auto">
                 {Math.round(
@@ -154,7 +154,7 @@ const OpenBets = ({ currentUser, contract }) => {
             </div>
             <div className="col-span-6 mx-auto mb-2">
               <button
-                className="mx-auto bg-green-700 px-2 rounded-md hover:bg-green-500"
+                className="mx-auto rounded-md bg-green-700 px-2 hover:bg-green-500"
                 onClick={() => acceptBet(bet.id, bet.better_deposit)}
               >
                 {" "}
@@ -166,7 +166,7 @@ const OpenBets = ({ currentUser, contract }) => {
       </div>
       <div className="fixed bottom-0 w-full">
         <button
-          className="bottom-0 my-8 float-right px-5 py-2 mx-5 bg-red-500 text-white text-sm font-bold tracking-wide rounded-full focus:outline-none"
+          className="bottom-0 float-right my-8 mx-5 rounded-full bg-red-500 px-5 py-2 text-sm font-bold tracking-wide text-white focus:outline-none"
           onClick={() => setModalVisible(true)}
         >
           Add Bet
@@ -262,11 +262,11 @@ const Modal = ({ visible, onClose, contract }) => {
 
   const ReviewDiv = () => {
     return (
-      <div className="bg-white p-2 rounded lg:w-1/2 w-72 h-96 relative">
-        <h1 className="font-semibold text-center text-xl text-gray-700 pb-5">
+      <div className="relative h-96 w-72 rounded bg-white p-2 lg:w-1/2">
+        <h1 className="pb-5 text-center text-xl font-semibold text-gray-700">
           Please review to make sure everything is correct
         </h1>
-        <div className="grid grid-cols-2 items-center justify-center w-1/2">
+        <div className="grid w-1/2 grid-cols-2 items-center justify-center">
           <div className="">Game: </div>
           <div className="">
             {homeTeam} vs {awayTeam}
@@ -282,13 +282,13 @@ const Modal = ({ visible, onClose, contract }) => {
         </div>
 
         <button
-          className="px-5 py-2 bg-gray-700 text-white rounded"
+          className="rounded bg-gray-700 px-5 py-2 text-white"
           onClick={reverseReview}
         >
           Cancel
         </button>
         <button
-          className="px-5 py-2 bg-gray-700 text-white rounded"
+          className="rounded bg-gray-700 px-5 py-2 text-white"
           onClick={() => handleSubmitBet()}
         >
           Submit
@@ -299,30 +299,30 @@ const Modal = ({ visible, onClose, contract }) => {
 
   const FormDiv = () => {
     return (
-      <div className="bg-white p-2 rounded lg:w-1/2 w-72 h-96 relative">
+      <div className="relative h-96 w-72 rounded bg-white p-2 lg:w-1/2">
         <button onClick={() => onClose()}>X</button>
-        <h1 className="font-semibold text-center text-xl text-gray-700 pb-5">
+        <h1 className="pb-5 text-center text-xl font-semibold text-gray-700">
           Make a bet
         </h1>
         <div className="flex items-center justify-center">
           <select
             className="form-select form-select-sm
-                    appearance-none
+                    m-0
                     block
                     w-1/2
-                    px-2
-                    py-1
-                    text-sm
-                    text-center
+                    appearance-none
+                    rounded
+                    border
+                    border-solid
+                    border-gray-300
+                    bg-white
+                    bg-clip-padding bg-no-repeat px-2
+                    py-1 text-center text-sm
                     font-normal
                     text-gray-700
-                    bg-white bg-clip-padding bg-no-repeat
-                    border border-solid border-gray-300
-                    rounded
                     transition
                     ease-in-out
-                    m-0
-                    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                    focus:border-blue-600 focus:bg-white focus:text-gray-700 focus:outline-none"
             aria-label=".form-select-sm example"
             onChange={(e) => changeGameHandler(e)}
             value={selectedGameId}
@@ -339,25 +339,25 @@ const Modal = ({ visible, onClose, contract }) => {
             ))}
           </select>
         </div>
-        <div className="flex pt-5 items-center justify-center">
+        <div className="flex items-center justify-center pt-5">
           <select
             className="form-select form-select-sm
-                    appearance-none
+                    m-0
                     block
                     w-1/2
-                    px-2
-                    py-1
-                    text-sm
-                    text-center
+                    appearance-none
+                    rounded
+                    border
+                    border-solid
+                    border-gray-300
+                    bg-white
+                    bg-clip-padding bg-no-repeat px-2
+                    py-1 text-center text-sm
                     font-normal
                     text-gray-700
-                    bg-white bg-clip-padding bg-no-repeat
-                    border border-solid border-gray-300
-                    rounded
                     transition
                     ease-in-out
-                    m-0
-                    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                    focus:border-blue-600 focus:bg-white focus:text-gray-700 focus:outline-none"
             aria-label=".form-select-sm example"
             onChange={(e) => changeMarketMakerTeamHandler(e)}
             value={marketMakerTeam}
@@ -369,9 +369,9 @@ const Modal = ({ visible, onClose, contract }) => {
             <option value={awayTeam}>{awayTeam}</option>
           </select>
         </div>
-        <div className="flex pt-5 items-center justify-center">
+        <div className="flex items-center justify-center pt-5">
           <input
-            className="w-1/2 bg-gray-200 rounded"
+            className="w-1/2 rounded bg-gray-200"
             type="number"
             placeholder="Amount you're betting"
             name="marketMakerDeposit"
@@ -379,9 +379,9 @@ const Modal = ({ visible, onClose, contract }) => {
             value={marketMakerDeposit}
           />
         </div>
-        <div className="flex pt-5 items-center justify-center">
+        <div className="flex items-center justify-center pt-5">
           <input
-            className="w-1/2 bg-gray-200 rounded"
+            className="w-1/2 rounded bg-gray-200"
             type="number"
             placeholder="Amount your opponent is betting"
             name="betterDeposit"
@@ -390,9 +390,9 @@ const Modal = ({ visible, onClose, contract }) => {
           />
         </div>
 
-        <div className="text-center absolute inset-x-0 bottom-10">
+        <div className="absolute inset-x-0 bottom-10 text-center">
           <button
-            className="px-5 py-2 bg-gray-700 text-white rounded"
+            className="rounded bg-gray-700 px-5 py-2 text-white"
             onClick={handleReview}
           >
             Review Your Bet
@@ -404,7 +404,7 @@ const Modal = ({ visible, onClose, contract }) => {
 
   if (!visible) return null;
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center ">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-25 backdrop-blur-sm ">
       {onReviewStage ? <ReviewDiv /> : <FormDiv />}
     </div>
   );
