@@ -156,7 +156,7 @@ const GameBets = ({ currentUser, contract }) => {
               "text-black font-bold"
             }`}
           >
-            {gameData.hTeamScore}{" "}
+            {gameData.vTeamScore}{" "}
             {parseInt(gameData.hTeamScore) < parseInt(gameData.vTeamScore) && (
               <MdArrowLeft className="float-right mt-1" />
             )}
