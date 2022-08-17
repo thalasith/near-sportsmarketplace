@@ -6,6 +6,12 @@ import * as nearAPI from "near-api-js";
 import { MdArrowLeft, MdArrowRight } from "react-icons/md";
 import getTeamFormatter from "../utils/getTeamFormatter";
 import { parseNearAmount } from "near-api-js/lib/utils/format";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
+import Big from "big.js";
+
+const BOATLOAD_OF_GAS = Big(3)
+  .times(10 ** 13)
+  .toFixed();
 
 const {
   utils: {
@@ -37,6 +43,7 @@ function americanOddsCalculator(amount, total) {
 const GameBets = ({ currentUser, contract }) => {
   let { gameDate, gameId } = useParams();
   const { width } = useWindowDimensions();
+  const [showOpenBets, setShowOpenBets] = useState(true);
   const [gameData, setGameData] = useState({
     gameId: gameId,
     gameDate: gameDate,
@@ -59,8 +66,10 @@ const GameBets = ({ currentUser, contract }) => {
     gameStarted: false,
   });
   const [gameBets, setGameBets] = useState([]);
+  const [gameBetsShown, setGameBetsShown] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  console.log(gameBets);
+  const [parent] = useAutoAnimate(/* optional config */);
+
   const handleModalClose = () => {
     setModalVisible(false);
   };
@@ -143,9 +152,31 @@ const GameBets = ({ currentUser, contract }) => {
         game_id: gameId,
       });
       setGameBets(allOpenBets);
+      setGameBetsShown(allOpenBets.filter((bet) => bet.better_found === false));
     };
     handleInit();
   }, [gameDate, gameId, contract]);
+
+  const acceptBet = async (betId, deposit) => {
+    try {
+      await contract.accept_bet_index({ id: betId }, BOATLOAD_OF_GAS, deposit);
+      const newOpenBets = gameBets.filter((bet) => bet.id !== betId);
+      setGameBets(newOpenBets);
+    } catch (error) {
+      alert("You have to login first!");
+    }
+  };
+  const handleSetOpenBetsTrue = () => {
+    const openBets = gameBets.filter((bet) => bet.better_found === false);
+    setGameBetsShown(openBets);
+    setShowOpenBets(true);
+  };
+
+  const handleSetOpenBetsFalse = () => {
+    const acceptedBets = gameBets.filter((bet) => bet.better_found === true);
+    setGameBetsShown(acceptedBets);
+    setShowOpenBets(false);
+  };
 
   return (
     <div className="flex w-full flex-col items-center">
@@ -170,7 +201,9 @@ const GameBets = ({ currentUser, contract }) => {
           />
           <div className="float-right">
             <p className="text-lg ">
-              {getTeamFormatter(gameData.vTeamTriCode)}
+              {width > 1600
+                ? getTeamFormatter(gameData.vTeamTriCode)
+                : gameData.vTeamTriCode}
             </p>
             <p className="float-right text-sm">{gameData.vTeamRecord}</p>
           </div>
@@ -230,25 +263,62 @@ const GameBets = ({ currentUser, contract }) => {
             className="float-left"
           />
           <div className="float-left">
-            <p className="text-lg">{getTeamFormatter(gameData.hTeamTriCode)}</p>
+            <p className="text-lg">
+              {width > 1600
+                ? getTeamFormatter(gameData.hTeamTriCode)
+                : gameData.hTeamTriCode}
+            </p>
             <p className="float-left text-sm">{gameData.hTeamRecord}</p>
           </div>
         </div>
       </div>
       <button
         className={
-          "my-2 flex flex-col items-center justify-center rounded bg-blue-500 px-2 py-1 text-xl text-white hover:bg-blue-700 "
+          "mt-5 mb-2 flex flex-col items-center justify-center rounded bg-blue-500 px-2 py-1 text-xl text-white hover:bg-blue-700 "
         }
         onClick={() => setModalVisible(true)}
       >
         Add a bet on this game
       </button>
-      <div className="mb-5 text-2xl">
-        Bets on {getTeamFormatter(gameData.hTeamTriCode)} vs.{" "}
-        {getTeamFormatter(gameData.vTeamTriCode)}
+      <div className="mb-5 text-2xl font-bold">
+        Bets on{" "}
+        {width > 768
+          ? getTeamFormatter(gameData.vTeamTriCode)
+          : gameData.vTeamTriCode}{" "}
+        vs.{" "}
+        {width > 768
+          ? getTeamFormatter(gameData.hTeamTriCode)
+          : gameData.hTeamTriCode}
       </div>
-      <div className="m-auto grid w-11/12 justify-center py-2 lg:w-3/4 lg:grid-cols-[repeat(auto-fit,_16.666666%)] ">
-        {gameBets.map((bet) => (
+      <div className="flex w-11/12 flex-row lg:w-7/12">
+        <button
+          className={`w-1/2 bg-gray-200 text-center ${
+            showOpenBets && "bg-blue-500 text-white"
+          }`}
+          onClick={() => handleSetOpenBetsTrue()}
+        >
+          Open Bets
+        </button>
+        <button
+          className={`w-1/2 bg-gray-200 text-center ${
+            !showOpenBets && "bg-blue-500 text-white"
+          }`}
+          onClick={() => handleSetOpenBetsFalse()}
+        >
+          Accepted Bets
+        </button>
+      </div>
+      <div
+        className="m-auto grid w-11/12 justify-center py-2 lg:w-3/4 lg:grid-cols-[repeat(auto-fit,_16.666666%)]"
+        ref={parent}
+      >
+        {gameBetsShown.length === 0 &&
+          showOpenBets &&
+          "No open bets on this game"}
+        {gameBetsShown.length === 0 &&
+          !showOpenBets &&
+          "Nobody has agreed on a bet on this game."}
+        {gameBetsShown.map((bet) => (
           <div
             key={bet.id}
             className="m-auto my-2 w-full rounded-md border-2 border-gray-300 bg-gray-200 px-2 lg:col-span-2 lg:w-2/3"
@@ -322,6 +392,7 @@ const GameBets = ({ currentUser, contract }) => {
                   className={
                     "flex flex-col items-center justify-center rounded bg-blue-500 px-2 py-1 text-white hover:bg-blue-700 "
                   }
+                  onClick={() => acceptBet(bet.id, bet.better_deposit)}
                 >
                   Accept Bet
                 </button>

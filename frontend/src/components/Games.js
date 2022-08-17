@@ -123,6 +123,11 @@ const Games = () => {
           <MdArrowForwardIos onClick={handleNextWeek} />
         </button>
       </div>
+      {shownGames.length === 0 && (
+        <div className="py-5 text-center text-2xl font-bold">
+          No games played.
+        </div>
+      )}
       <div className="grid py-5 lg:grid-cols-3 ">
         {shownGames.map((game) => {
           return (

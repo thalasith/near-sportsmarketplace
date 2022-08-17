@@ -62,10 +62,7 @@ const GameButton = ({
 
   const GamePostponed = () => {
     return (
-      <a
-        className="mx-2 my-2 grid w-48 grid-cols-2 grid-rows-2 rounded hover:bg-gray-200"
-        href={`/games/${gameDate}/${gameId}`}
-      >
+      <div className="mx-2 my-2 grid w-48 grid-cols-2 grid-rows-2 rounded hover:bg-gray-200">
         <div className="w-5/8 float-left pl-2 pt-1">
           <img
             src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${hTeam.toLowerCase()}.png`}
@@ -88,8 +85,7 @@ const GameButton = ({
           />
           {vTeam}
         </div>
-        {/* <div className="text-right w-2/8 pr-2 pb-1">{vTeamScore}</div> */}
-      </a>
+      </div>
     );
   };
 
