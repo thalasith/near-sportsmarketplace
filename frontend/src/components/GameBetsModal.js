@@ -79,13 +79,14 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
   // Stage === 1
   const TeamSelection = () => {
     return (
-      <div class="py-5">
+      <div className="py-5">
         <div className="flex flex-row items-center justify-center">
           <div className="mx-2">
             <button
               className={`${
-                marketMakerTeam === gameData.hTeamTriCode && "bg-gray-200"
-              } px-2 py-1 rounded flex flex-col items-center justify-center`}
+                marketMakerTeam === gameData.hTeamTriCode &&
+                "bg-gray-200 border border-separate border-blue-500"
+              } px-2 py-1 rounded flex flex-col items-center justify-center w-48`}
               onClick={() => handleTeamSelection(gameData.hTeamTriCode)}
             >
               <img
@@ -103,8 +104,9 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
           <div className="mx-2">
             <button
               className={`${
-                marketMakerTeam === gameData.vTeamTriCode && "bg-gray-200"
-              } px-2 py-1 rounded flex flex-col items-center justify-center`}
+                marketMakerTeam === gameData.vTeamTriCode &&
+                "bg-gray-200 border border-separate border-blue-500"
+              } px-2 py-1 rounded flex flex-col items-center justify-center w-48`}
               onClick={() => handleTeamSelection(gameData.vTeamTriCode)}
             >
               <img
@@ -119,9 +121,9 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
             </button>
           </div>
         </div>
-        <div className="flex flex-row items-center justify-center pt-2 text-lg font-bold text-gray-700">
+        <div className="flex flex-row items-center justify-center pt-2 text-lg font-bold text-gray-500">
           {marketMakerTeam &&
-            `You selected ${getTeamFormatter(marketMakerTeam)} to win.`}
+            `You selected the ${getTeamFormatter(marketMakerTeam)} to win.`}
         </div>
       </div>
     );
@@ -130,27 +132,51 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
   // Stage === 3
   const ReviewSelection = () => {
     return (
-      <div className="py-10 px-20 ">
-        <p className="text-2xl py-2">
-          {" "}
-          The winner will get{" "}
-          {payOutFromAmericanOdds(marketMakerDeposit, americanOdds)} N.
+      <div className="pt-2 px-20 ">
+        <h3 className="text-2xl py-1 text-black font-bold">
+          Review your bet information:
+        </h3>
+        <p className="text-xl py-1 text-gray-500">
+          1. The winner will get{" "}
+          <span className="font-bold text-black">
+            {payOutFromAmericanOdds(marketMakerDeposit, americanOdds)} N.
+          </span>
         </p>
-        <p className="text-2xl py-2">
-          You are betting {marketMakerDeposit} N on {marketMakerTeam}. Your odds
-          are +{americanOdds}.
+        <p className="text-xl py-1 text-gray-500">
+          2. You are betting{" "}
+          <span className="font-bold text-black">{marketMakerDeposit} N</span>{" "}
+          on{" "}
+          <span className="font-bold text-black">
+            {getTeamFormatter(marketMakerTeam)}.
+          </span>{" "}
+          Your odds are{" "}
+          <span className="font-bold text-black">+{americanOdds}.</span>
         </p>
-        <p className="text-2xl py-2">
-          Your opponent will be betting{" "}
-          {payOutFromAmericanOdds(marketMakerDeposit, americanOdds) -
-            marketMakerDeposit}{" "}
-          N on {bidderTeam}. Their odds are{" "}
-          {americanOddsCalculator(
-            payOutFromAmericanOdds(marketMakerDeposit, americanOdds) -
-              marketMakerDeposit,
-            payOutFromAmericanOdds(marketMakerDeposit, americanOdds)
-          )}
+        <p className="text-xl py-1 text-gray-500">
+          3. Your opponent will be betting{" "}
+          <span className="font-bold text-black">
+            {payOutFromAmericanOdds(marketMakerDeposit, americanOdds) -
+              marketMakerDeposit}{" "}
+            N
+          </span>{" "}
+          on{" "}
+          <span className="font-bold text-black">
+            {getTeamFormatter(bidderTeam)}
+          </span>
+          . Their odds are{" "}
+          <span className="font-bold text-black">
+            {americanOddsCalculator(
+              payOutFromAmericanOdds(marketMakerDeposit, americanOdds) -
+                marketMakerDeposit,
+              payOutFromAmericanOdds(marketMakerDeposit, americanOdds)
+            )}
+          </span>
           .
+        </p>
+        <p className="text-xl py-1 text-gray-500">
+          4. If an opponent is found, you have{" "}
+          <span className="font-bold text-black">2 hours</span> before tip-off
+          to cancel the bet.
         </p>
       </div>
     );
@@ -171,8 +197,11 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
   if (!visible) return null;
   return (
     <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center ">
-      <div className="bg-white p-2 rounded lg:w-1/2 w-96 h-96 relative">
-        <GrClose className="float-right" onClick={() => onClose()} />
+      <div className="bg-white p-2 rounded lg:w-1/2 lg:h-96 w-96 h-2/3 relative top-0">
+        <GrClose
+          className="float-right fill-red-500"
+          onClick={() => onClose()}
+        />
         <div className="border-b-2 pb-4 pt-2">
           <div className="uppercase tracking-wide text-xs font-bold text-gray-500 mb-1 leading-tight">
             Step {formStage} of 3
@@ -183,7 +212,7 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
                 <div className="text-lg font-bold text-gray-700 leading-tight">
                   {formStage === 1 && "Select your Team"}
                   {formStage === 2 && "Make your Bet"}
-                  {formStage === 3 && "Review Game"}
+                  {formStage === 3 && "Review Bet"}
                 </div>
               </div>
             </div>
@@ -203,7 +232,7 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
 
         {formStage === 1 && <TeamSelection />}
         {formStage === 2 && (
-          <div class="py-5">
+          <div className="py-5">
             <div className="flex flex-row items-center justify-center">
               <div className="py-2">
                 <label

@@ -148,30 +148,30 @@ const GameBets = ({ currentUser, contract }) => {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <div className="flex flex-row items-center lg:w-1/2 w-11/12 bg-gray-200 py-2 ">
+      <div className="flex flex-row items-center lg:w-7/12 w-11/12 bg-gray-200 py-2 ">
         <div className="lg:basis-1/3 basis-1/2 pr-2">
           <p
-            className={`float-right text-2xl ${
-              parseInt(gameData.vTeamScore) > parseInt(gameData.hTeamScore) &&
-              "text-gray-500"
+            className={`float-right text-2xl text-gray-500 ${
+              parseInt(gameData.hTeamScore) < parseInt(gameData.vTeamScore) &&
+              "text-black font-bold"
             }`}
           >
             {gameData.hTeamScore}{" "}
-            {parseInt(gameData.vTeamScore) < parseInt(gameData.hTeamScore) && (
+            {parseInt(gameData.hTeamScore) < parseInt(gameData.vTeamScore) && (
               <MdArrowLeft className="float-right mt-1" />
             )}
           </p>
           <img
-            src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${gameData.hTeamTriCode.toLocaleLowerCase()}.png`}
-            alt={`${gameData.hTeamTriCode} Team Logo`}
+            src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${gameData.vTeamTriCode.toLocaleLowerCase()}.png`}
+            alt={`${gameData.vTeamTriCode} Team Logo`}
             width="50"
             className="float-right"
           />
           <div className="float-right">
             <p className="text-lg ">
-              {getTeamFormatter(gameData.hTeamTriCode)}
+              {getTeamFormatter(gameData.vTeamTriCode)}
             </p>
-            <p className="text-sm float-right">{gameData.hTeamRecord}</p>
+            <p className="text-sm float-right">{gameData.vTeamRecord}</p>
           </div>
         </div>
         {width > 768 && (
@@ -190,20 +190,20 @@ const GameBets = ({ currentUser, contract }) => {
               </thead>
               <tbody>
                 <tr>
-                  <td>{gameData.hTeamTriCode}</td>
-                  <td className="text-center">{gameData.hTeamQ1Score}</td>
-                  <td className="text-center">{gameData.hTeamQ2Score}</td>
-                  <td className="text-center">{gameData.hTeamQ3Score}</td>
-                  <td className="text-center">{gameData.hTeamQ4Score}</td>
-                  <td className="text-center">{gameData.hTeamScore}</td>
-                </tr>
-                <tr>
                   <td>{gameData.vTeamTriCode}</td>
                   <td className="text-center">{gameData.vTeamQ1Score}</td>
                   <td className="text-center">{gameData.vTeamQ2Score}</td>
                   <td className="text-center">{gameData.vTeamQ3Score}</td>
                   <td className="text-center">{gameData.vTeamQ4Score}</td>
                   <td className="text-center">{gameData.vTeamScore}</td>
+                </tr>
+                <tr>
+                  <td>{gameData.hTeamTriCode}</td>
+                  <td className="text-center">{gameData.hTeamQ1Score}</td>
+                  <td className="text-center">{gameData.hTeamQ2Score}</td>
+                  <td className="text-center">{gameData.hTeamQ3Score}</td>
+                  <td className="text-center">{gameData.hTeamQ4Score}</td>
+                  <td className="text-center">{gameData.hTeamScore}</td>
                 </tr>
               </tbody>
             </table>
@@ -212,25 +212,25 @@ const GameBets = ({ currentUser, contract }) => {
 
         <div className="lg:basis-1/3 basis-1/2 pl-2">
           <p
-            className={`float-left text-2xl ${
-              parseInt(gameData.vTeamScore) < parseInt(gameData.hTeamScore) &&
-              "text-gray-500"
+            className={`float-left text-2xl text-gray-500 ${
+              parseInt(gameData.hTeamScore) > parseInt(gameData.vTeamScore) &&
+              "text-black font-bold"
             }`}
           >
-            {parseInt(gameData.vTeamScore) > parseInt(gameData.hTeamScore) && (
+            {parseInt(gameData.hTeamScore) > parseInt(gameData.vTeamScore) && (
               <MdArrowRight className="float-left mt-1" />
             )}{" "}
-            {gameData.vTeamScore}
+            {gameData.hTeamScore}
           </p>
           <img
-            src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${gameData.vTeamTriCode.toLocaleLowerCase()}.png`}
-            alt={`${gameData.vTeamTriCode} Team Logo`}
+            src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${gameData.hTeamTriCode.toLocaleLowerCase()}.png`}
+            alt={`${gameData.hTeamTriCode} Team Logo`}
             width="50"
             className="float-left"
           />
           <div className="float-left">
-            <p className="text-lg">{getTeamFormatter(gameData.vTeamTriCode)}</p>
-            <p className="text-sm float-left">{gameData.vTeamRecord}</p>
+            <p className="text-lg">{getTeamFormatter(gameData.hTeamTriCode)}</p>
+            <p className="text-sm float-left">{gameData.hTeamRecord}</p>
           </div>
         </div>
       </div>
