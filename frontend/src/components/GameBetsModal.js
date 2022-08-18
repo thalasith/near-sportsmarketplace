@@ -40,8 +40,8 @@ function payOutFromAmericanOdds(amount, odds) {
 }
 
 const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
-  const [marketMakerDeposit, setMarketMakerDeposit] = useState(5);
-  const [americanOdds, setAmericanOdds] = useState(100);
+  const [marketMakerDeposit, setMarketMakerDeposit] = useState(0);
+  const [americanOdds, setAmericanOdds] = useState(0);
   const [marketMakerTeam, setMarketMakerTeam] = useState("");
   const [bidderTeam, setBidderTeam] = useState("");
   const [formStage, setFormStage] = useState(1);
@@ -93,7 +93,7 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
               className={`${
                 marketMakerTeam === gameData.hTeamTriCode &&
                 "border-separate border border-blue-500 bg-gray-200"
-              } flex w-48 flex-col items-center justify-center rounded px-2 py-1`}
+              } flex w-36 flex-col items-center justify-center rounded px-2 py-1 lg:w-48`}
               onClick={() => handleTeamSelection(gameData.hTeamTriCode)}
             >
               <img
@@ -113,7 +113,7 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
               className={`${
                 marketMakerTeam === gameData.vTeamTriCode &&
                 "border-separate border border-blue-500 bg-gray-200"
-              } flex w-48 flex-col items-center justify-center rounded px-2 py-1`}
+              } flex w-36 flex-col items-center justify-center rounded px-2 py-1 lg:w-48`}
               onClick={() => handleTeamSelection(gameData.vTeamTriCode)}
             >
               <img
@@ -146,17 +146,17 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
   // Stage === 3
   const ReviewSelection = () => {
     return (
-      <div className="px-20 pt-2 ">
-        <h3 className="py-1 text-2xl font-bold text-black">
+      <div className="lg:px:20 w-full px-8 pt-2">
+        <h3 className="w-full py-1  text-sm font-bold text-black lg:text-2xl">
           Review your bet information:
         </h3>
-        <p className="py-1 text-xl text-gray-500">
+        <p className="py-1 text-gray-500 lg:text-xl">
           1. The winner will get{" "}
           <span className="font-bold text-black">
             {payOutFromAmericanOdds(marketMakerDeposit, americanOdds)} N.
           </span>
         </p>
-        <p className="py-1 text-xl text-gray-500">
+        <p className="py-1 text-sm text-gray-500 lg:text-xl">
           2. You are betting{" "}
           <span className="font-bold text-black">{marketMakerDeposit} N</span>{" "}
           on{" "}
@@ -164,9 +164,9 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
             {getTeamFormatter(marketMakerTeam)}.
           </span>{" "}
           Your odds are{" "}
-          <span className="font-bold text-black">+{americanOdds}.</span>
+          <span className="font-bold text-black">{americanOdds}.</span>
         </p>
-        <p className="py-1 text-xl text-gray-500">
+        <p className="py-1 text-sm text-gray-500 lg:text-xl">
           3. Your opponent will be betting{" "}
           <span className="font-bold text-black">
             {payOutFromAmericanOdds(marketMakerDeposit, americanOdds) -
@@ -187,7 +187,7 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
           </span>
           .
         </p>
-        <p className="py-1 text-xl text-gray-500">
+        <p className="py-1 text-sm text-gray-500 lg:text-xl">
           4. If an opponent is found, you have{" "}
           <span className="font-bold text-black">2 hours</span> before tip-off
           to cancel the bet.
@@ -202,7 +202,11 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
         ...validationErrors,
         noTeamSelected: "Please select a team.",
       });
-    } else if (formStage === 2 && validationErrors.negativeBettingAmount) {
+    } else if (
+      formStage === 2 &&
+      (validationErrors.negativeBettingAmount ||
+        validationErrors.wrongBettingOdds)
+    ) {
     } else if (formStage >= 1 && formStage < 3) {
       setFormStage(formStage + 1);
     }
@@ -230,16 +234,16 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
   };
 
   const handleOdds = (value) => {
-    if (Math.abs(value) > 100) {
+    if (Math.abs(value) >= 100) {
       setAmericanOdds(value);
       setValidationErrors({
         ...validationErrors,
-        wrongBettingsOdds: "",
+        wrongBettingOdds: "",
       });
     } else {
       setValidationErrors({
         ...validationErrors,
-        wrongBettingsOdds: "Please put in valid odds (between -100 and 100)",
+        wrongBettingOdds: "Please put in valid odds (between -100 and 100)",
       });
     }
   };
@@ -247,7 +251,7 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
   if (!visible) return null;
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-25 backdrop-blur-sm ">
-      <div className="relative top-0 h-2/3 w-96 rounded bg-white p-2 lg:h-96 lg:w-1/2">
+      <div className="relative top-0 h-2/3 w-11/12 rounded bg-white p-2 lg:h-96 lg:w-1/2">
         <GrClose
           className="float-right fill-red-500"
           onClick={() => onClose()}
