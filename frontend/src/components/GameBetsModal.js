@@ -42,17 +42,24 @@ function payOutFromAmericanOdds(amount, odds) {
 const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
   const [marketMakerDeposit, setMarketMakerDeposit] = useState(5);
   const [americanOdds, setAmericanOdds] = useState(100);
-  const [marketMakerTeam, setMarketMakerTeam] = useState(gameData.hTeamTriCode);
-  const [bidderTeam, setBidderTeam] = useState(gameData.vTeamTriCode);
+  const [marketMakerTeam, setMarketMakerTeam] = useState("");
+  const [bidderTeam, setBidderTeam] = useState("");
   const [formStage, setFormStage] = useState(1);
+  const [validationErrors, setValidationErrors] = useState({
+    noTeamSelected: "",
+    negativeBettingAmount: "",
+    wrongBettingOdds: "",
+  });
 
   const handleTeamSelection = (team) => {
     if (team === gameData.hTeamTriCode) {
       setMarketMakerTeam(gameData.hTeamTriCode);
       setBidderTeam(gameData.vTeamTriCode);
+      setValidationErrors({ ...validationErrors, noTeamSelected: "" });
     } else {
       setMarketMakerTeam(gameData.vTeamTriCode);
       setBidderTeam(gameData.hTeamTriCode);
+      setValidationErrors({ ...validationErrors, noTeamSelected: "" });
     }
   };
 
@@ -124,6 +131,13 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
         <div className="flex flex-row items-center justify-center pt-2 text-lg font-bold text-gray-500">
           {marketMakerTeam &&
             `You selected the ${getTeamFormatter(marketMakerTeam)} to win.`}
+          {validationErrors.noTeamSelected ? (
+            <p className=" text-center text-red-500 ">
+              {validationErrors.noTeamSelected}
+            </p>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     );
@@ -183,7 +197,13 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
   };
 
   const handleNext = () => {
-    if (formStage >= 1 && formStage < 3) {
+    if (formStage === 1 && !marketMakerTeam) {
+      setValidationErrors({
+        ...validationErrors,
+        noTeamSelected: "Please select a team.",
+      });
+    } else if (formStage === 2 && validationErrors.negativeBettingAmount) {
+    } else if (formStage >= 1 && formStage < 3) {
       setFormStage(formStage + 1);
     }
   };
@@ -191,6 +211,36 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
   const handlePrevious = () => {
     if (formStage >= 2) {
       setFormStage(formStage - 1);
+    }
+  };
+
+  const handleMarketMakerDeposit = (value) => {
+    if (value > 0) {
+      setMarketMakerDeposit(value);
+      setValidationErrors({
+        ...validationErrors,
+        negativeBettingAmount: "",
+      });
+    } else {
+      setValidationErrors({
+        ...validationErrors,
+        negativeBettingAmount: "Please input a valid positive amount",
+      });
+    }
+  };
+
+  const handleOdds = (value) => {
+    if (Math.abs(value) > 100) {
+      setAmericanOdds(value);
+      setValidationErrors({
+        ...validationErrors,
+        wrongBettingsOdds: "",
+      });
+    } else {
+      setValidationErrors({
+        ...validationErrors,
+        wrongBettingsOdds: "Please put in valid odds (between -100 and 100)",
+      });
     }
   };
 
@@ -248,9 +298,14 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
                     id="marketMakerDeposit"
                     className="block w-full rounded-md border border-solid border-gray-300  py-2 pl-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder="Amount you will bet"
-                    onChange={(e) => setMarketMakerDeposit(e.target.value)}
-                    value={marketMakerDeposit}
+                    onChange={(e) => handleMarketMakerDeposit(e.target.value)}
                   />
+
+                  <div className="text-xs italic text-red-500">
+                    {validationErrors.negativeBettingAmount
+                      ? validationErrors.negativeBettingAmount
+                      : " "}
+                  </div>
                 </div>
                 <label
                   htmlFor="marketMakerTeam"
@@ -263,9 +318,14 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
                     className="block w-full rounded-md border border-solid border-gray-300  py-2 pl-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     type="number"
                     name="marketMakerDeposit"
-                    onChange={(e) => setAmericanOdds(e.target.value)}
-                    value={americanOdds}
+                    onChange={(e) => handleOdds(e.target.value)}
+                    placeholder="Your Bettings Odds"
                   />
+                  <div className="text-xs italic text-red-500">
+                    {validationErrors.wrongBettingOdds
+                      ? validationErrors.wrongBettingOdds
+                      : " "}
+                  </div>
                 </div>
               </div>
             </div>
