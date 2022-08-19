@@ -2,23 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import GameBetsModal from "./GameBetsModal";
-import * as nearAPI from "near-api-js";
 import { MdArrowLeft, MdArrowRight } from "react-icons/md";
 import getTeamFormatter from "../utils/getTeamFormatter";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import Big from "big.js";
-import { americanOddsCalculator } from "../utils/betFormatter";
 import IndividualBet from "./IndividualBet";
 
 const BOATLOAD_OF_GAS = Big(3)
   .times(10 ** 13)
   .toFixed();
-
-const {
-  utils: {
-    format: { formatNearAmount },
-  },
-} = nearAPI;
 
 const GameBets = ({ contract }) => {
   let { gameDate, gameId } = useParams();
@@ -292,7 +284,7 @@ const GameBets = ({ contract }) => {
         </button>
       </div>
       <div
-        className="grid w-11/12 justify-center py-2 lg:w-8/12 lg:grid-cols-[repeat(auto-fit,_16.666666%)]"
+        className="grid w-8/12 grid-cols-1 justify-center py-2 lg:w-3/4 lg:grid-cols-[repeat(auto-fit,_16.666666%)]"
         ref={parent}
       >
         {gameBetsShown.length === 0 &&

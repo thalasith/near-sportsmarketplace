@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import IndividualBet from "./IndividualBet";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import * as nearAPI from "near-api-js";
 import Big from "big.js";
 const {
@@ -10,39 +12,13 @@ const BOATLOAD_OF_GAS = Big(3)
   .times(10 ** 13)
   .toFixed();
 
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  var hours = date.getHours();
-  var minutes = date.getMinutes();
-  var ampm = hours >= 12 ? "pm" : "am";
-  hours = hours % 12;
-  hours = hours ? hours : 12; // the hour '0' should be '12'
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  var strTime = hours + ":" + minutes + " " + ampm;
-  return (
-    date.getMonth() +
-    1 +
-    "/" +
-    date.getDate() +
-    "/" +
-    date.getFullYear() +
-    "  " +
-    strTime
-  );
-};
-
 const OpenBets = ({ currentUser, contract }) => {
   const [openBets, setOpenBets] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const handleModalClose = () => {
-    setModalVisible(false);
-  };
+  const [parent] = useAutoAnimate(/* optional config */);
 
   useEffect(() => {
     const getBets = async () => {
       const allOpenBets = await contract.get_all_open_bets();
-      console.log("allOpenBets", allOpenBets);
       setOpenBets(allOpenBets);
     };
     getBets();
@@ -59,7 +35,17 @@ const OpenBets = ({ currentUser, contract }) => {
   };
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-4xl font-bold">All Open Bets Below</h1>
+      <h1 className="pb-10 text-4xl font-bold">All Open Bets Below</h1>
+      <div
+        className="grid w-8/12 grid-cols-1 justify-center py-2 lg:w-3/4 lg:grid-cols-[repeat(auto-fit,_16.666666%)]"
+        ref={parent}
+      >
+        {openBets.length === 0 && "No open bets on this game"}
+        {openBets.length === 0 && "Nobody has agreed on a bet on this game."}
+        {openBets.map((bet) => (
+          <IndividualBet bet={bet} key={bet.id} acceptBet={acceptBet} />
+        ))}
+      </div>
     </div>
   );
 };

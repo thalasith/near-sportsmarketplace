@@ -1,5 +1,5 @@
 import React from "react";
-import { americanOddsCalculator } from "../utils/betFormatter";
+import { americanOddsCalculator, formatDate } from "../utils/formating";
 import * as nearAPI from "near-api-js";
 
 const {
@@ -8,11 +8,13 @@ const {
   },
 } = nearAPI;
 
-const IndividualBet = ({ bet, acceptBet, gameData }) => {
+const IndividualBet = ({ bet, acceptBet }) => {
   const parseTeams = (gameUrlCode) => {
     const teamsString = gameUrlCode.split("/")[1];
     return { vTeam: teamsString.slice(0, 3), hTeam: teamsString.slice(3, 6) };
   };
+
+  const startTimeUtc = new Date(bet.start_time_utc);
 
   return (
     <div
@@ -28,7 +30,7 @@ const IndividualBet = ({ bet, acceptBet, gameData }) => {
                 : "text-gray-700"
             }`}
           >
-            {gameData.vTeamTriCode}
+            {parseTeams(bet.game_url_code).vTeam}
           </span>{" "}
           vs{" "}
           <span
@@ -38,9 +40,10 @@ const IndividualBet = ({ bet, acceptBet, gameData }) => {
                 : "text-gray-700"
             }`}
           >
-            {gameData.hTeamTriCode}
+            {parseTeams(bet.game_url_code).hTeam}
           </span>
         </p>
+        <p>Tip Off: {formatDate(startTimeUtc)}</p>
         <img
           src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${bet.better_team.toLocaleLowerCase()}.png`}
           alt={`${bet.better_team} Team Logo`}
@@ -85,7 +88,7 @@ const IndividualBet = ({ bet, acceptBet, gameData }) => {
         <div className="flex flex-col text-start">
           <button
             className={
-              "my-1 flex flex-col items-center justify-center rounded bg-blue-500 py-2 text-white hover:bg-blue-700  "
+              "my-1 flex flex-col items-center justify-center rounded bg-blue-500 py-2 text-white hover:bg-blue-700"
             }
             onClick={() => acceptBet(bet.id, bet.better_deposit)}
           >

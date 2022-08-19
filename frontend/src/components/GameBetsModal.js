@@ -6,7 +6,7 @@ import getTeamFormatter from "../utils/getTeamFormatter";
 import {
   americanOddsCalculator,
   payOutFromAmericanOdds,
-} from "../utils/betFormatter";
+} from "../utils/formating";
 const {
   utils: {
     format: { parseNearAmount },
