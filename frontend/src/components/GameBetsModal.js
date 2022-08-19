@@ -3,6 +3,10 @@ import { GrClose } from "react-icons/gr";
 import * as nearAPI from "near-api-js";
 import Big from "big.js";
 import getTeamFormatter from "../utils/getTeamFormatter";
+import {
+  americanOddsCalculator,
+  payOutFromAmericanOdds,
+} from "../utils/betFormatter";
 const {
   utils: {
     format: { parseNearAmount },
@@ -12,38 +16,11 @@ const BOATLOAD_OF_GAS = Big(3)
   .times(10 ** 13)
   .toFixed();
 
-function americanOddsCalculator(amount, total) {
-  if (total / amount - 1 >= 2) {
-    return (
-      "+" +
-      ((total / amount - 1) * 100).toLocaleString("en-US", {
-        useGrouping: false,
-      })
-    );
-  } else {
-    return (
-      "-" +
-      (100 / (total / amount - 1)).toLocaleString("en-US", {
-        useGrouping: false,
-      })
-    );
-  }
-}
-
-// TO DO: look at this again (need more structure in the restrictions i.e. nothing between -100 and 100)
-function payOutFromAmericanOdds(amount, odds) {
-  if (odds > 0) {
-    return (odds / 100 + 1) * amount;
-  } else {
-    return (100 / -odds + 1) * amount;
-  }
-}
-
 const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
   const [marketMakerDeposit, setMarketMakerDeposit] = useState(0);
   const [americanOdds, setAmericanOdds] = useState(0);
   const [marketMakerTeam, setMarketMakerTeam] = useState("");
-  const [bidderTeam, setBidderTeam] = useState("");
+  const [betterTeam, setBetterTeam] = useState("");
   const [formStage, setFormStage] = useState(1);
   const [validationErrors, setValidationErrors] = useState({
     noTeamSelected: "",
@@ -54,11 +31,11 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
   const handleTeamSelection = (team) => {
     if (team === gameData.hTeamTriCode) {
       setMarketMakerTeam(gameData.hTeamTriCode);
-      setBidderTeam(gameData.vTeamTriCode);
+      setBetterTeam(gameData.vTeamTriCode);
       setValidationErrors({ ...validationErrors, noTeamSelected: "" });
     } else {
       setMarketMakerTeam(gameData.vTeamTriCode);
-      setBidderTeam(gameData.hTeamTriCode);
+      setBetterTeam(gameData.hTeamTriCode);
       setValidationErrors({ ...validationErrors, noTeamSelected: "" });
     }
   };
@@ -72,10 +49,10 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
       game_id: gameData.gameId,
       game_date: gameData.gameDate,
       market_maker_team: marketMakerTeam,
-      bidder_team: bidderTeam,
+      better_team: betterTeam,
       start_time_utc: gameData.startTimeUTC,
+      game_url_code: gameData.gameUrlCode,
     };
-
     await contract.create_bet(
       bet,
       BOATLOAD_OF_GAS,
@@ -91,26 +68,6 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
           <div className="mx-2">
             <button
               className={`${
-                marketMakerTeam === gameData.hTeamTriCode &&
-                "border-separate border border-blue-500 bg-gray-200"
-              } flex w-36 flex-col items-center justify-center rounded px-2 py-1 lg:w-48`}
-              onClick={() => handleTeamSelection(gameData.hTeamTriCode)}
-            >
-              <img
-                src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${gameData.hTeamTriCode.toLowerCase()}.png`}
-                alt={`${gameData.hTeamTriCode} Team Logo`}
-                width="100"
-                className="float-left"
-              />
-              <p className="text-center">
-                {getTeamFormatter(gameData.hTeamTriCode)}
-              </p>
-            </button>
-          </div>
-          <div className="sm:mx-5 lg:mx-8">vs.</div>
-          <div className="mx-2">
-            <button
-              className={`${
                 marketMakerTeam === gameData.vTeamTriCode &&
                 "border-separate border border-blue-500 bg-gray-200"
               } flex w-36 flex-col items-center justify-center rounded px-2 py-1 lg:w-48`}
@@ -122,8 +79,28 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
                 width="100"
                 className="float-left"
               />
-              <div className="text-center">
+              <p className="text-center">
                 {getTeamFormatter(gameData.vTeamTriCode)}
+              </p>
+            </button>
+          </div>
+          <div className="sm:mx-5 lg:mx-8">vs.</div>
+          <div className="mx-2">
+            <button
+              className={`${
+                marketMakerTeam === gameData.hTeamTriCode &&
+                "border-separate border border-blue-500 bg-gray-200"
+              } flex w-36 flex-col items-center justify-center rounded px-2 py-1 lg:w-48`}
+              onClick={() => handleTeamSelection(gameData.hTeamTriCode)}
+            >
+              <img
+                src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${gameData.hTeamTriCode.toLowerCase()}.png`}
+                alt={`${gameData.hTeamTriCode} Team Logo`}
+                width="100"
+                className="float-left"
+              />
+              <div className="text-center">
+                {getTeamFormatter(gameData.hTeamTriCode)}
               </div>
             </button>
           </div>
@@ -175,7 +152,7 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
           </span>{" "}
           on{" "}
           <span className="font-bold text-black">
-            {getTeamFormatter(bidderTeam)}
+            {getTeamFormatter(betterTeam)}
           </span>
           . Their odds are{" "}
           <span className="font-bold text-black">

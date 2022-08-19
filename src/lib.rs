@@ -4,6 +4,8 @@ use serde::{Deserialize, Serialize};
 
 const SEASON:&str = "2021";
 
+const NBA_TEAMS: &'static [&'static str] = &["ATL", "BOS", "BKN", "CHA", "CHI", "CLE", "DAL", "DEN", "DET", "GSW", "HOU", "IND", "LAC", "LAL", "MEM", "MIA", "MIL", "MIN", "NOP", "NYK", "OKC", "ORL", "PHI", "PHO", "POR", "SAC", "SAS", "TOR", "UTA", "WAS"];
+
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize, Clone, Debug)]
 pub struct NBABet {
@@ -16,12 +18,13 @@ pub struct NBABet {
     game_date: String,
     start_time_utc: String,
     market_maker_team: String,
-    bidder_team: String,
+    better_team: String,
     better_found: bool,
     contract_locked: bool,
     winner: Option<AccountId>,
     winning_team: Option<String>,
-    paid_out: bool
+    paid_out: bool,
+    game_url_code:String
 }
 
 #[near_bindgen]
@@ -36,7 +39,6 @@ impl Default for NBABetsDate {
     fn default() -> Self {
         panic!("Should be initialized before usage")
     }
-
 }
 
 #[near_bindgen]
@@ -50,7 +52,9 @@ impl NBABetsDate {
         }
     }
     #[payable]
-    pub fn create_bet(&mut self, better_amount:U128, game_id: String, game_date: String, market_maker_team: String, bidder_team: String, start_time_utc: String) {
+    pub fn create_bet(&mut self, better_amount:U128, game_id: String, game_date: String, market_maker_team: String, better_team: String, start_time_utc: String, game_url_code: String) {
+        assert!(NBA_TEAMS.contains(&market_maker_team.as_str()) == true, "Market maker team not found");
+        assert!(NBA_TEAMS.contains(&better_team.as_str()) == true , "Better team not found");
         let game_day = game_date.clone();
         let game_id = game_id.clone();
         let amount = env::attached_deposit();
@@ -69,12 +73,13 @@ impl NBABetsDate {
             game_date: game_day.to_string(), 
             start_time_utc: start_time_utc.to_string(),
             market_maker_team: market_maker_team.to_string(), 
-            bidder_team: bidder_team.to_string(), 
+            better_team: better_team.to_string(), 
             better_found: false, 
             contract_locked: false, 
             winner: None, 
             winning_team: None,
-            paid_out: false
+            paid_out: false,
+            game_url_code: game_url_code.to_string()
         });
         self.bets.insert(&SEASON.to_string(), &bets);
     }
@@ -149,9 +154,9 @@ impl NBABetsDate {
         let paid_out_amount = (better_deposit + market_maker_deposit) * 975 / 1000;
         let winning_team = winning_team.to_string();
 
-        assert!(winning_team == bet.bidder_team || winning_team == bet.market_maker_team, "Team not found.");
+        assert!(winning_team == bet.better_team || winning_team == bet.market_maker_team, "Team not found.");
         
-        if winning_team == bet.bidder_team {
+        if winning_team == bet.better_team {
             //why do i neeed to use this format?
             bet.winner = bet.better.clone();
             NBABetsDate::pay_the_winner(bet.better.clone().unwrap(), paid_out_amount);
@@ -248,7 +253,7 @@ mod tests {
         }
     }
 
-    fn get_context_bidder() -> VMContext {
+    fn get_context_better() -> VMContext {
         VMContext {
             predecessor_account_id: "alice.testnet".to_string(),
             current_account_id: "alice.testnet".to_string(),
@@ -268,6 +273,34 @@ mod tests {
             storage_usage: 1000
         }
     }
+
+    #[test]
+    #[should_panic(expected = "Market maker team not found")]
+    fn test_create_bet_marketmaker_panick() {
+        let mut context = get_context();
+        context.attached_deposit = ntoy(10).into();
+        testing_env!(context.clone());
+        // let mut contract = NBABet::new(AccountId::try_from(context.current_account_id.clone()).unwrap());
+        // contract.set_bet(ntoy(5).into());
+
+        let mut contract = NBABetsDate::new();
+        // Atlanta (1610612737) vs New York (1610612752)
+        contract.create_bet(ntoy(5).into(),"0022100488".to_string(), "20211225".to_string(), "".to_string(), "NYK".to_string(), "2021-12-25T17:00:00.000Z".to_string(), "20211225/ATLNYK".to_string());
+    }
+
+    #[test]
+    #[should_panic(expected = "Better team not found")]
+    fn test_create_bet_better_panick() {
+        let mut context = get_context();
+        context.attached_deposit = ntoy(10).into();
+        testing_env!(context.clone());
+        // let mut contract = NBABet::new(AccountId::try_from(context.current_account_id.clone()).unwrap());
+        // contract.set_bet(ntoy(5).into());
+
+        let mut contract = NBABetsDate::new();
+        // Atlanta (1610612737) vs New York (1610612752)
+        contract.create_bet(ntoy(5).into(),"0022100488".to_string(), "20211225".to_string(), "BOS".to_string(), "".to_string(), "2021-12-25T17:00:00.000Z".to_string(), "20211225/ATLNYK".to_string());
+    }
     
     #[test]
     fn test_get_all_bets() {
@@ -279,9 +312,9 @@ mod tests {
 
         let mut contract = NBABetsDate::new();
         // Atlanta (1610612737) vs New York (1610612752)
-        contract.create_bet(ntoy(5).into(),"0022100488".to_string(), "20211225".to_string(), "ATL".to_string(), "NYK".to_string(), "2021-12-25T17:00:00.000Z".to_string());
+        contract.create_bet(ntoy(5).into(),"0022100488".to_string(), "20211225".to_string(), "ATL".to_string(), "NYK".to_string(), "2021-12-25T17:00:00.000Z".to_string(), "20211225/ATLNYK".to_string());
         // Boston (1610612738) vs Milwaukee (1610612749)
-        contract.create_bet(ntoy(10).into(),"0022100489".to_string(), "20211225".to_string(), "BOS".to_string(), "MIL".to_string(), "2021-12-25T17:30:00.000Z".to_string());
+        contract.create_bet(ntoy(10).into(),"0022100489".to_string(), "20211225".to_string(), "BOS".to_string(), "MIL".to_string(), "2021-12-25T17:30:00.000Z".to_string(), "20211225/BOSMIL".to_string());
 
         let bets =  contract.get_all_bets();
         // println!("{:#?}", bets);
@@ -299,12 +332,12 @@ mod tests {
         let mut contract = NBABetsDate::new();
         // Atlanta (1610612737) vs New York (1610612752)
 
-        contract.create_bet(ntoy(5).into(),"0022100488".to_string(), "20211225".to_string(), "ATL".to_string(), "NYK".to_string(), "2021-12-25T17:00:00.000Z".to_string());
+        contract.create_bet(ntoy(5).into(),"0022100488".to_string(), "20211225".to_string(), "ATL".to_string(), "NYK".to_string(), "2021-12-25T17:00:00.000Z".to_string(), "20211225/ATLNYK".to_string());
         // Boston (1610612738) vs Milwaukee (1610612749)
-        contract.create_bet(ntoy(10).into(),"0022100489".to_string(), "20211225".to_string(), "BOS".to_string(), "MIL".to_string(), "2021-12-25T17:30:00.000Z".to_string());
+        contract.create_bet(ntoy(10).into(),"0022100489".to_string(), "20211225".to_string(), "BOS".to_string(), "MIL".to_string(), "2021-12-25T17:30:00.000Z".to_string(), "20211225/BOSMIL".to_string());
         // Creating dummy
-        contract.create_bet(ntoy(5).into(),"0022100489".to_string(), "20211225".to_string(), "BOS".to_string(), "MIL".to_string(), "2021-12-25T17:30:00.000Z".to_string());
-        contract.create_bet(ntoy(10).into(),"0022100488".to_string(), "20211225".to_string(), "ATL".to_string(), "NYK".to_string(), "2021-12-25T17:00:00.000Z".to_string());
+        contract.create_bet(ntoy(5).into(),"0022100489".to_string(), "20211225".to_string(), "BOS".to_string(), "MIL".to_string(), "2021-12-25T17:30:00.000Z".to_string(), "20211225/BOSMIL".to_string());
+        contract.create_bet(ntoy(10).into(),"0022100488".to_string(), "20211225".to_string(), "ATL".to_string(), "NYK".to_string(), "2021-12-25T17:00:00.000Z".to_string(), "20211225/ATLNYK".to_string());
         
         contract.cancel_bet(1);
         assert_eq!(contract.get_bet_index_by_id(2), 1);
@@ -313,7 +346,7 @@ mod tests {
 
     #[test]
     #[should_panic(expected = "called `Option::unwrap()` on a `None` value")]
-    fn get_bet_panic() {
+    fn test_get_bet_panic() {
         let mut context = get_context();
         context.attached_deposit = ntoy(10).into();
         testing_env!(context.clone());
@@ -326,6 +359,7 @@ mod tests {
         contract.get_bet_by_id(0);
     }
 
+
     #[test]
     fn accept_bet_by_id() {
         let mut context = get_context();
@@ -336,8 +370,8 @@ mod tests {
 
         let mut contract = NBABetsDate::new();
         // Atlanta (1610612737) vs New York (1610612752)
-        contract.create_bet(ntoy(5).into(),"0022100488".to_string(), "20211225".to_string(), "ATL".to_string(), "NYK".to_string(), "2021-12-25T17:00:00.000Z".to_string());
-        let mut context_better = get_context_bidder();
+        contract.create_bet(ntoy(5).into(),"0022100488".to_string(), "20211225".to_string(), "ATL".to_string(), "NYK".to_string(), "2021-12-25T17:00:00.000Z".to_string(), "20211225/ATLNYK".to_string());
+        let mut context_better = get_context_better();
         context_better.attached_deposit = ntoy(5).into();
         testing_env!(context_better.clone());
         contract.accept_bet_index(0);
@@ -355,7 +389,7 @@ mod tests {
 
         let mut contract = NBABetsDate::new();
         // Atlanta (1610612737) vs New York (1610612752)
-        contract.create_bet(ntoy(5).into(),"0022100488".to_string(), "20211225".to_string(), "ATL".to_string(), "NYK".to_string(), "2021-12-25T17:00:00.000Z".to_string());
+        contract.create_bet(ntoy(5).into(),"0022100488".to_string(), "20211225".to_string(), "ATL".to_string(), "NYK".to_string(), "2021-12-25T17:00:00.000Z".to_string(), "20211225/ATLNYK".to_string());
         
         assert_eq!(contract.get_all_bets().len(), 1);
         contract.cancel_bet(0);
@@ -371,8 +405,8 @@ mod tests {
 
         let mut contract = NBABetsDate::new();
         // Atlanta (1610612737) vs New York (1610612752)
-        contract.create_bet(ntoy(5).into(),"0022100488".to_string(), "20211225".to_string(), "ATL".to_string(), "NYK".to_string(), "2021-12-25T17:00:00.000Z".to_string());
-        let mut context_better = get_context_bidder();
+        contract.create_bet(ntoy(5).into(),"0022100488".to_string(), "20211225".to_string(), "ATL".to_string(), "NYK".to_string(), "2021-12-25T17:00:00.000Z".to_string(), "20211225/ATLNYK".to_string());
+        let mut context_better = get_context_better();
         context_better.attached_deposit = ntoy(5).into();
         testing_env!(context_better.clone());
         contract.accept_bet_index(0);
@@ -393,8 +427,8 @@ mod tests {
 
         let mut contract = NBABetsDate::new();
         // Atlanta (1610612737) vs New York (1610612752)
-        contract.create_bet(ntoy(5).into(),"0022100488".to_string(), "20211225".to_string(), "ATL".to_string(), "NYK".to_string(),"2021-12-25T17:00:00.000Z".to_string());
-        let mut context_better = get_context_bidder();
+        contract.create_bet(ntoy(5).into(),"0022100488".to_string(), "20211225".to_string(), "ATL".to_string(), "NYK".to_string(),"2021-12-25T17:00:00.000Z".to_string(), "20211225/ATLNYK".to_string());
+        let mut context_better = get_context_better();
         context_better.attached_deposit = ntoy(5).into();
         testing_env!(context_better.clone());
         contract.accept_bet_index(0);
