@@ -8,7 +8,8 @@ const {
   },
 } = nearAPI;
 
-const IndividualBet = ({ bet, acceptBet }) => {
+const IndividualBet = ({ bet, acceptBet, cancelBet }) => {
+  console.log(cancelBet);
   const parseTeams = (gameUrlCode) => {
     const teamsString = gameUrlCode.split("/")[1];
     return { vTeam: teamsString.slice(0, 3), hTeam: teamsString.slice(3, 6) };
@@ -77,6 +78,7 @@ const IndividualBet = ({ bet, acceptBet }) => {
             N
           </p>
         </div>
+
         {bet.better_found === false && (
           <div className="flex flex-col py-2 text-start">
             <p className="pt-1">
@@ -91,7 +93,31 @@ const IndividualBet = ({ bet, acceptBet }) => {
           <div className="flex flex-col text-start">
             <button
               className={
-                "my-1 flex flex-col items-center justify-center rounded bg-blue-500 py-2 text-white hover:bg-blue-700"
+                "m-1 flex flex-col items-center justify-center rounded bg-blue-500 py-2 text-white hover:bg-blue-700"
+              }
+              onClick={() => acceptBet(bet.id, bet.better_deposit)}
+            >
+              Accept Bet
+            </button>
+          </div>
+        )}
+        {cancelBet && (
+          <div className="flex flex-col text-start">
+            <button
+              className={
+                "m-1 rounded border bg-white py-2 text-center text-gray-600 shadow-sm hover:bg-gray-100 focus:outline-none"
+              }
+              onClick={() => cancelBet(bet.id)}
+            >
+              Cancel Bet
+            </button>
+          </div>
+        )}
+        {cancelBet && (
+          <div className="flex flex-col text-start">
+            <button
+              className={
+                "m-1 rounded bg-blue-500 py-2 text-center text-white hover:bg-blue-700"
               }
               onClick={() => acceptBet(bet.id, bet.better_deposit)}
             >

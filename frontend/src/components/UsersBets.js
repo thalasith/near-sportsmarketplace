@@ -27,8 +27,6 @@ const UsersBets = ({ contract, currentUser }) => {
   };
 
   useEffect(() => {
-    console.log(currentUser.accountId);
-
     const getBets = async () => {
       const allUsersBets = await contract.get_bets_by_account({
         lookup_account: currentUser.accountId,
@@ -40,7 +38,7 @@ const UsersBets = ({ contract, currentUser }) => {
     getBets();
   }, [contract]);
 
-  const handleCancelBet = async (betId) => {
+  const cancelBet = async (betId) => {
     const newUsersBets = usersBets.filter((bet) => bet.id !== betId);
     setUsersBets(newUsersBets);
     await contract.cancel_bet({ id: betId });
@@ -94,7 +92,12 @@ const UsersBets = ({ contract, currentUser }) => {
         >
           {shownBets.length === 0 && "Nothing to show here."}
           {shownBets.map((bet) => (
-            <IndividualBet bet={bet} key={bet.id} acceptBet={acceptBet} />
+            <IndividualBet
+              bet={bet}
+              key={bet.id}
+              acceptBet={acceptBet}
+              cancelBet={cancelBet}
+            />
           ))}
         </div>
       </div>

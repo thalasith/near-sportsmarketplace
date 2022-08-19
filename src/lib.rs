@@ -117,13 +117,12 @@ impl NBABetsDate {
         Promise::new(bet.better.unwrap()).transfer(bet.better_deposit.0)
     }
 
-
     pub fn cancel_bet(&mut self, id:i64) {
         let bet = self.get_bet_by_id(id);
         assert!(bet.paid_out == false, "This bet as already been paid out.");
         assert!(bet.contract_locked == false, "The game is about to start. You cannot cancel this.");
         if bet.better_found == true  { 
-            assert!(bet.better.unwrap() == env::signer_account_id() || bet.market_maker_id == env::signer_account_id(), "Please check your wallet. Your wallet is not better.");
+            assert!(bet.better.unwrap() == env::signer_account_id() || bet.market_maker_id == env::signer_account_id(), "You don't seem to be one of the betters.");
             self.return_funds_to_better(id);
         };
         self.return_funds_to_maker(id);
