@@ -210,7 +210,8 @@ impl NBABetsDate {
     }
 
     pub fn get_bets_by_account(&self, lookup_account: String) -> Vec<NBABet>{
-        self.get_all_bets().into_iter().filter(|x| x.market_maker_id.to_string() == lookup_account || x.better.as_ref().unwrap().to_string() == lookup_account).collect::<Vec<NBABet>>()
+        self.get_all_bets().into_iter().filter(|x| x.better != None && (x.market_maker_id.to_string() == lookup_account || x.better.as_ref().unwrap().to_string() == lookup_account)).collect::<Vec<NBABet>>()
+        // self.get_all_bets().into_iter().filter(|x| (x.market_maker_id.to_string() == lookup_account || x.better.as_ref().unwrap().to_string() == lookup_account)).collect::<Vec<NBABet>>()
     }
 
     pub fn get_open_bets_by_game_id(&self, game_id: String) -> Vec<NBABet>{
@@ -315,9 +316,9 @@ mod tests {
         contract.create_bet(ntoy(5).into(),"0022100488".to_string(), "20211225".to_string(), "ATL".to_string(), "NYK".to_string(), "2021-12-25T17:00:00.000Z".to_string(), "20211225/ATLNYK".to_string());
         // Boston (1610612738) vs Milwaukee (1610612749)
         contract.create_bet(ntoy(10).into(),"0022100489".to_string(), "20211225".to_string(), "BOS".to_string(), "MIL".to_string(), "2021-12-25T17:30:00.000Z".to_string(), "20211225/BOSMIL".to_string());
-
+        // println!("{:?}", contract.get_all_bets());
         let bets =  contract.get_all_bets();
-        // println!("{:#?}", bets);
+  
         assert_eq!(bets[0].game_id, "0022100488".to_string());
     }
 
@@ -365,8 +366,6 @@ mod tests {
         let mut context = get_context();
         context.attached_deposit = ntoy(10).into();
         testing_env!(context.clone());
-        // let mut contract = NBABet::new(AccountId::try_from(context.current_account_id.clone()).unwrap());
-        // contract.set_bet(ntoy(5).into());
 
         let mut contract = NBABetsDate::new();
         // Atlanta (1610612737) vs New York (1610612752)
@@ -377,6 +376,28 @@ mod tests {
         contract.accept_bet_index(0);
         assert_eq!(contract.get_bet_by_id(0).better_found, true);
         assert_eq!(contract.get_bet_by_id(0).better.unwrap().as_str(), "boris.testnet");
+    }
+
+    #[test]
+    fn get_account_better() {
+        let mut context = get_context();
+        context.attached_deposit = ntoy(10).into();
+        testing_env!(context.clone());
+        // let mut contract = NBABet::new(AccountId::try_from(context.current_account_id.clone()).unwrap());
+        // contract.set_bet(ntoy(5).into());
+
+        let mut contract = NBABetsDate::new();
+        // Atlanta (1610612737) vs New York (1610612752)
+        contract.create_bet(ntoy(5).into(),"0022100488".to_string(), "20211225".to_string(), "ATL".to_string(), "NYK".to_string(), "2021-12-25T17:00:00.000Z".to_string(), "20211225/ATLNYK".to_string());
+        
+        contract.create_bet(ntoy(10).into(),"0022100489".to_string(), "20211225".to_string(), "BOS".to_string(), "MIL".to_string(), "2021-12-25T17:30:00.000Z".to_string(), "20211225/BOSMIL".to_string());
+        let mut context_better = get_context_better();
+        context_better.attached_deposit = ntoy(5).into();
+        testing_env!(context_better.clone());
+        contract.accept_bet_index(0);
+        contract.get_bets_by_account("boris.testnet".to_string());
+        println!("print: {:#?}", contract.get_bets_by_account("boris.testnet".to_string()));
+
     }
 
     #[test]
@@ -412,7 +433,6 @@ mod tests {
         contract.accept_bet_index(0);
 
         contract.payout_bet(0, "ATL".to_string());
-        // println!("{:#?}", contract.get_bet_by_index(0));
         // assert_eq!(contract.get_bet_by_index(0).paid_out, true);
     }
 

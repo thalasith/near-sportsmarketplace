@@ -42,6 +42,8 @@ const GameBets = ({ contract }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [parent] = useAutoAnimate(/* optional config */);
 
+  console.log(gameBets);
+
   const handleModalClose = () => {
     setModalVisible(false);
   };

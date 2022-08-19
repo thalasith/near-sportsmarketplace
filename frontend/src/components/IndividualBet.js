@@ -77,24 +77,28 @@ const IndividualBet = ({ bet, acceptBet }) => {
             N
           </p>
         </div>
-        <div className="flex flex-col py-2 text-start">
-          <p className="pt-1">
-            You pay:{" "}
-            <span className="font-bold text-black">
-              {Math.round(formatNearAmount(bet.better_deposit) * 100) / 100} N
-            </span>
-          </p>
-        </div>
-        <div className="flex flex-col text-start">
-          <button
-            className={
-              "my-1 flex flex-col items-center justify-center rounded bg-blue-500 py-2 text-white hover:bg-blue-700"
-            }
-            onClick={() => acceptBet(bet.id, bet.better_deposit)}
-          >
-            Accept Bet
-          </button>
-        </div>
+        {bet.better_found === false && (
+          <div className="flex flex-col py-2 text-start">
+            <p className="pt-1">
+              You pay:{" "}
+              <span className="font-bold text-black">
+                {Math.round(formatNearAmount(bet.better_deposit) * 100) / 100} N
+              </span>
+            </p>
+          </div>
+        )}
+        {bet.better_found === false && (
+          <div className="flex flex-col text-start">
+            <button
+              className={
+                "my-1 flex flex-col items-center justify-center rounded bg-blue-500 py-2 text-white hover:bg-blue-700"
+              }
+              onClick={() => acceptBet(bet.id, bet.better_deposit)}
+            >
+              Accept Bet
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
