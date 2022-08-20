@@ -34,9 +34,9 @@ const Home = ({ currentUser, signIn }) => {
           sports betting.
         </h1>
         <p className="mx-auto mt-7 max-w-2xl px-2 text-lg tracking-tight text-slate-700">
-          Most sports betting apps are played against the house. We offer a
-          method to go head to head versus a real person while you decide your
-          own odds.
+          We leverage blockchain technology to provide a decentralized platform
+          for sports betting. Set your own odds on any NBA game and see if
+          anyone will take you up on it!
         </p>
         <div className="py-2 text-2xl font-bold text-slate-700">
           Become your own sportsbook today.
@@ -60,10 +60,10 @@ const Home = ({ currentUser, signIn }) => {
           )}
           {!currentUser && (
             <button
-              className="flex flex-row rounded-full border bg-blue-500 px-3 py-2 text-white hover:bg-blue-700"
+              className="flex flex-row rounded-full border bg-blue-500 px-3 py-2 font-bold uppercase text-white hover:bg-blue-700"
               onClick={signIn}
             >
-              Login to Continue
+              Connect your near wallet
             </button>
           )}
           <button className="flex flex-row rounded-full border border-gray-300 px-3 py-2 text-gray-500">
@@ -72,6 +72,25 @@ const Home = ({ currentUser, signIn }) => {
           </button>
         </div>
       </section>
+      <p className="absolute inset-x-0 bottom-0 mx-auto my-7 max-w-2xl px-2 text-lg font-semibold tracking-tight text-slate-700">
+        Powered by Near Protocol.
+        <a href="https://near.org/" className="text-center">
+          <svg
+            height="50"
+            width="50"
+            xmlns="http://www.w3.org/2000/svg"
+            x="0"
+            y="0"
+            enableBackground="new 0 0 90.1 90"
+            version="1.1"
+            viewBox="0 0 90.1 90"
+            xmlSpace="preserve"
+            className="m-auto mt-2"
+          >
+            <path d="M72.2 4.6L53.4 32.5c-1.3 1.9 1.2 4.2 3 2.6L74.9 19c.5-.4 1.2-.1 1.2.6v50.3c0 .7-.9 1-1.3.5l-56-67C17 1.2 14.4 0 11.5 0h-2C4.3 0 0 4.3 0 9.6v70.8C0 85.7 4.3 90 9.6 90c3.3 0 6.4-1.7 8.2-4.6l18.8-27.9c1.3-1.9-1.2-4.2-3-2.6l-18.5 16c-.5.4-1.2.1-1.2-.6V20.1c0-.7.9-1 1.3-.5l56 67c1.8 2.2 4.5 3.4 7.3 3.4h2c5.3 0 9.6-4.3 9.6-9.6V9.6c0-5.3-4.3-9.6-9.6-9.6-3.4 0-6.5 1.7-8.3 4.6z"></path>
+          </svg>
+        </a>
+      </p>
     </div>
   );
 };

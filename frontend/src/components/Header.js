@@ -10,16 +10,24 @@ const {
 const Header = ({ currentUser, signIn, signOut }) => {
   const [navbarOpen, setNavbarOpen] = useState(false);
 
-  const logout = <button onClick={signOut}>LOGOUT</button>;
+  const logout = (
+    <button onClick={signOut} className="uppercase">
+      Disconnect Your Wallet
+    </button>
+  );
 
-  const login = <button onClick={signIn}>LOGIN</button>;
+  const login = (
+    <button onClick={signIn} className="uppercase">
+      Connect Your Near Wallet
+    </button>
+  );
 
   return (
     <nav className="relative mb-3 flex flex-wrap items-center justify-between bg-blue-500 px-2 py-3">
       <div className="container mx-auto flex flex-wrap items-center justify-between px-4">
         <a
           href="/"
-          className="flex flex-row rounded-full text-2xl font-bold  text-white"
+          className="flex flex-row rounded-full text-2xl font-bold  text-white hover:text-orange-500"
           // className=" flex w-full flex-row text-2xl font-bold text-white lg:static lg:block lg:w-auto lg:justify-start"
         >
           <GiBasketballBall className="mt-1 mr-1" color="EA8500" />{" "}
@@ -41,7 +49,7 @@ const Header = ({ currentUser, signIn, signOut }) => {
         >
           <ul
             className={
-              "list-reset flex w-full flex-col justify-end justify-items-stretch pr-4 lg:ml-auto lg:w-1/4 lg:flex-row"
+              "list-reset flex w-full flex-col justify-end justify-items-stretch lg:ml-auto lg:w-1/3  lg:flex-row"
             }
           >
             <li className="nav-item ">
