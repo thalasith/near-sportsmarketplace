@@ -1,11 +1,11 @@
 import React from "react";
 import { BsPlayFill } from "react-icons/bs";
 
-const Home = () => {
+const Home = ({ currentUser, signIn }) => {
   return (
     <div className="mx-auto text-center ">
       {/* First Section */}
-      <section className="min-h-screen w-screen  ">
+      <section className=" w-screen  ">
         <h1 className="font-display lg:pb-30 mx-auto max-w-4xl pt-40 text-5xl font-medium tracking-tight text-slate-900 sm:text-7xl">
           A{" "}
           <span className="relative whitespace-nowrap text-blue-600">
@@ -42,18 +42,30 @@ const Home = () => {
           Become your own sportsbook today.
         </div>
         <div className="mt-5 flex justify-center gap-x-2 px-3 lg:gap-x-6">
-          <a
-            href="/open_bets"
-            className="rounded-full bg-blue-500 px-3 py-2 text-white"
-          >
-            View all open bets
-          </a>
-          <a
-            href="/games"
-            className="rounded-full bg-blue-500 px-3 py-2 text-white"
-          >
-            Find a Game to Bet
-          </a>
+          {currentUser && (
+            <a
+              href="/open_bets"
+              className="rounded-full bg-blue-500 px-3 py-2 text-white hover:bg-blue-700"
+            >
+              View all open bets
+            </a>
+          )}
+          {currentUser && (
+            <a
+              href="/games"
+              className="rounded-full bg-blue-500 px-3 py-2 text-white hover:bg-blue-700"
+            >
+              Find a Game to Bet
+            </a>
+          )}
+          {!currentUser && (
+            <button
+              className="flex flex-row rounded-full border bg-blue-500 px-3 py-2 text-white hover:bg-blue-700"
+              onClick={signIn}
+            >
+              Login to Continue
+            </button>
+          )}
           <button className="flex flex-row rounded-full border border-gray-300 px-3 py-2 text-gray-500">
             <BsPlayFill className="mt-1" color="3B81F6" />
             Watch video

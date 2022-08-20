@@ -9,7 +9,6 @@ const {
 } = nearAPI;
 
 const IndividualBet = ({ bet, acceptBet, cancelBet }) => {
-  console.log(cancelBet);
   const parseTeams = (gameUrlCode) => {
     const teamsString = gameUrlCode.split("/")[1];
     return { vTeam: teamsString.slice(0, 3), hTeam: teamsString.slice(3, 6) };

@@ -28,7 +28,10 @@ function App({ contract, currentUser, nearConfig, wallet }) {
     <BrowserRouter>
       <Header currentUser={currentUser} signIn={signIn} signOut={signOut} />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={<Home currentUser={currentUser} signIn={signIn} />}
+        />
         <Route
           exact
           path="/games"

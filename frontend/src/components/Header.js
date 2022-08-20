@@ -39,10 +39,14 @@ const Header = ({ currentUser, signIn, signOut }) => {
             (navbarOpen ? " flex flex-col" : " hidden")
           }
         >
-          <ul className="list-reset flex flex-col lg:ml-auto lg:flex-row">
-            <li className="nav-item">
+          <ul
+            className={
+              "list-reset flex w-full flex-col justify-end justify-items-stretch pr-4 lg:ml-auto lg:w-1/4 lg:flex-row"
+            }
+          >
+            <li className="nav-item ">
               <a
-                className="flex items-center justify-end rounded-full px-3 py-2 text-xs font-bold uppercase leading-snug text-white hover:bg-blue-700"
+                className="grid rounded-full px-3 py-2 text-right text-xs font-bold uppercase leading-snug text-white hover:bg-blue-700 lg:text-center"
                 href="/games"
               >
                 Games
@@ -50,7 +54,7 @@ const Header = ({ currentUser, signIn, signOut }) => {
             </li>
             <li className="nav-item">
               <a
-                className="flex items-center rounded-full px-3 py-2 text-xs font-bold uppercase leading-snug text-white hover:bg-blue-700 hover:opacity-75"
+                className="grid rounded-full px-3 py-2 text-right text-xs font-bold uppercase leading-snug text-white hover:bg-blue-700 lg:text-center"
                 href="/open_bets"
               >
                 Open Bets
@@ -58,7 +62,7 @@ const Header = ({ currentUser, signIn, signOut }) => {
             </li>
             <li className="nav-item">
               <a
-                className="flex items-center rounded-full px-3 py-2 text-xs font-bold uppercase leading-snug text-white hover:bg-blue-700"
+                className="grid rounded-full px-3 py-2 text-right text-xs font-bold uppercase leading-snug text-white hover:bg-blue-700 lg:text-center"
                 href="/users_bets"
               >
                 Your Bets
@@ -68,15 +72,16 @@ const Header = ({ currentUser, signIn, signOut }) => {
 
           <ul className="flex list-none flex-col justify-end px-3 lg:ml-auto lg:flex-row lg:px-0">
             <li className="nav-item">
-              <div className="flex items-center px-3 py-2 text-xs font-bold uppercase leading-snug text-white  lg:pl-1">
+              <div className="mt-2 flex items-center px-3 py-2 text-xs font-bold uppercase leading-snug text-white lg:mt-0">
                 {currentUser
-                  ? "Your Balance: " + formatNearAmount(currentUser.balance, 2)
-                  : ""}{" "}
-                N
+                  ? "Your Balance: " +
+                    formatNearAmount(currentUser.balance, 2) +
+                    " NEAR"
+                  : ""}
               </div>
             </li>
             <li className="nav-item">
-              <div className="flex items-center py-2 pr-3 text-xs font-bold uppercase leading-snug text-white hover:opacity-75">
+              <div className="mt-2 grid border-separate items-center rounded-lg border-2 bg-white px-3 py-1 text-xs font-bold uppercase leading-snug text-blue-500 hover:bg-gray-200 lg:mt-0.5">
                 {currentUser ? logout : login}
               </div>
             </li>
