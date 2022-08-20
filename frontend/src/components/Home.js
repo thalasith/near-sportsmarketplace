@@ -72,7 +72,7 @@ const Home = ({ currentUser, signIn }) => {
           </button>
         </div>
       </section>
-      <p className="absolute inset-x-0 bottom-0 mx-auto my-7 max-w-2xl px-2 text-lg font-semibold tracking-tight text-slate-700">
+      <p className="mx-auto my-7 max-w-2xl px-2 text-lg font-semibold tracking-tight text-slate-700 lg:absolute lg:inset-x-0 lg:bottom-0">
         Powered by Near Protocol.
         <a href="https://near.org/" className="text-center">
           <svg
