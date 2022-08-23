@@ -84,7 +84,7 @@ const UsersBets = ({ contract, currentUser }) => {
       setUsersBets(allUsersBets);
     };
     getBets();
-  }, [contract, currentUser.accountId]);
+  }, [contract, currentUser]);
 
   const cancelBet = async (betId) => {
     const newUsersBets = usersBets.filter((bet) => bet.id !== betId);
