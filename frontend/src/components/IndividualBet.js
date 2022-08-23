@@ -21,7 +21,7 @@ const IndividualBet = ({
   };
 
   const startTimeUtc = new Date(bet.start_time_utc);
-  console.log(bet);
+
   return (
     <div
       key={bet.id}
@@ -106,7 +106,7 @@ const IndividualBet = ({
             </button>
           </div>
         )}
-        {cancelBet && bet.better_found == false && (
+        {cancelBet && bet.better_found === false && (
           <div className="flex flex-col text-start">
             <button
               className={
@@ -118,7 +118,7 @@ const IndividualBet = ({
             </button>
           </div>
         )}
-        {cancelBet && bet.better_found == false && (
+        {cancelBet && bet.better_found === false && (
           <div className="flex flex-col text-start">
             <button
               className={

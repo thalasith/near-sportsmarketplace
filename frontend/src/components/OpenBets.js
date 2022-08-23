@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import IndividualBet from "./IndividualBet";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import * as nearAPI from "near-api-js";
 import Big from "big.js";
-const {
-  utils: {
-    format: { formatNearAmount, parseNearAmount },
-  },
-} = nearAPI;
+
 const BOATLOAD_OF_GAS = Big(3)
   .times(10 ** 13)
   .toFixed();

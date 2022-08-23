@@ -6,7 +6,7 @@ import * as nearAPI from "near-api-js";
 
 const {
   utils: {
-    format: { parseNearAmount, formatNearAmount },
+    format: { formatNearAmount },
   },
 } = nearAPI;
 
@@ -30,13 +30,15 @@ const UsersBets = ({ contract, currentUser }) => {
     } else if (state === "Accepted Bets") {
       setShownBets(
         usersBets.filter(
-          (bet) => bet.better_found === true && bet.paid_out == false
+          (bet) => bet.better_found === true && bet.paid_out === false
         )
       );
       setShownState(state);
     } else if (state === "Completed Bets") {
       setShownBets(
-        usersBets.filter((bet) => bet.paid_out === true && bet.paid_out == true)
+        usersBets.filter(
+          (bet) => bet.paid_out === true && bet.paid_out === true
+        )
       );
       setShownState(state);
     }
@@ -49,7 +51,7 @@ const UsersBets = ({ contract, currentUser }) => {
       });
 
       const completedUsersBets = allUsersBets.filter(
-        (bet) => bet.paid_out === true && bet.paid_out == true
+        (bet) => bet.paid_out === true && bet.paid_out === true
       );
 
       const winAmount = completedUsersBets.reduce((sum, bet) => {
@@ -82,7 +84,7 @@ const UsersBets = ({ contract, currentUser }) => {
       setUsersBets(allUsersBets);
     };
     getBets();
-  }, [contract]);
+  }, [contract, currentUser.accountId]);
 
   const cancelBet = async (betId) => {
     const newUsersBets = usersBets.filter((bet) => bet.id !== betId);
@@ -121,7 +123,34 @@ const UsersBets = ({ contract, currentUser }) => {
   const LoggedIn = () => {
     return (
       <div className="flex flex-col items-center">
-        <h1 className="pb-10 text-4xl font-bold">
+        <div className="flex w-4/12 flex-col items-center lg:w-6/12">
+          <h2 className="pb-2 text-2xl font-semibold">Your Bet Statistics</h2>
+          <div className="flex flex-row items-center">
+            <div className="mx-1 border-separate rounded-lg border-2 border-blue-500 px-4">
+              <h3 className="text-xl font-semibold">
+                Your Winning Percentage:
+              </h3>
+              <h1 className="pb-2 text-center text-6xl font-bold">
+                {" "}
+                {100 * (userTotalWins / usersTotalBets)}%
+              </h1>
+            </div>
+            <div className="mx-1 border-separate rounded-lg border-2 border-blue-500 px-4">
+              <h3 className="text-xl font-semibold">Your Total Wins:</h3>
+              <h1 className="pb-2 text-center text-6xl font-bold">
+                {" "}
+                {formatNearAmount(
+                  userAmountWon.toLocaleString("en-US", {
+                    useGrouping: false,
+                  }),
+                  2
+                )}
+                {" N"}
+              </h1>
+            </div>
+          </div>
+        </div>
+        <h1 className="py-5 text-4xl font-bold">
           Here are all your bets below.
         </h1>
         <div className="flex w-11/12 flex-row lg:w-7/12">

@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { BsPlayFill } from "react-icons/bs";
+import { GrClose } from "react-icons/gr";
 
 const Home = ({ currentUser, signIn }) => {
+  const [modalShown, setModalShown] = useState(false);
+
+  const onClose = () => {
+    setModalShown(false);
+  };
+
+  const onOpen = () => {
+    setModalShown(true);
+  };
   return (
     <div className="mx-auto text-center ">
       {/* First Section */}
@@ -66,7 +76,10 @@ const Home = ({ currentUser, signIn }) => {
               Connect your near wallet
             </button>
           )}
-          <button className="flex flex-row rounded-full border border-gray-300 px-3 py-2 text-gray-500">
+          <button
+            className="flex flex-row rounded-full border border-gray-300 px-3 py-2 text-gray-500"
+            onClick={onOpen}
+          >
             <BsPlayFill className="mt-1" color="3B81F6" />
             Watch video
           </button>
@@ -91,6 +104,38 @@ const Home = ({ currentUser, signIn }) => {
           </svg>
         </a>
       </p>
+      {modalShown && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-25 backdrop-blur-sm ">
+          <div className="h-8/10 relative top-0 w-11/12 rounded bg-white p-2 md:h-2/3 lg:h-3/4 lg:w-1/2">
+            <GrClose
+              className="float-right fill-red-500"
+              onClick={() => onClose()}
+            />
+            <div className="my-4 flex  flex-col items-center border-b-2 pb-2 pt-2">
+              <h2 className="text-2xl font-bold text-slate-700">
+                Become your own sportsbook in 3 easy steps.
+              </h2>
+
+              {/* <video
+                width="750"
+                height="500"
+                className="flex flex-col items-center"
+                controls
+              >
+                <source src="/videos/bet_example.mp4" type="video/mp4" />
+              </video> */}
+            </div>
+            <div>
+              <iframe
+                title="Bet Example Video"
+                class="aspect-video w-full"
+                src="/videos/bet_example.mp4"
+                type="video/mp4"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
