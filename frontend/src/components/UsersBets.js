@@ -2,6 +2,13 @@ import React, { useState, useEffect } from "react";
 import IndividualBet from "./IndividualBet";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import Big from "big.js";
+import * as nearAPI from "near-api-js";
+
+const {
+  utils: {
+    format: { parseNearAmount, formatNearAmount },
+  },
+} = nearAPI;
 
 const BOATLOAD_OF_GAS = Big(3)
   .times(10 ** 13)
@@ -12,16 +19,25 @@ const UsersBets = ({ contract, currentUser }) => {
   const [shownBets, setShownBets] = useState([]);
   const [shownState, setShownState] = useState("Open Bets");
   const [parent] = useAutoAnimate(/* optional config */);
+  const [userTotalWins, setUserTotalWins] = useState(0);
+  const [usersTotalBets, setUsersTotalBets] = useState(0);
+  const [userAmountWon, setUserAmountWon] = useState(0);
 
   const handleStateChange = (state) => {
     if (state === "Open Bets") {
       setShownBets(usersBets.filter((bet) => bet.better_found === false));
       setShownState(state);
     } else if (state === "Accepted Bets") {
-      setShownBets(usersBets.filter((bet) => bet.better_found === true));
+      setShownBets(
+        usersBets.filter(
+          (bet) => bet.better_found === true && bet.paid_out == false
+        )
+      );
       setShownState(state);
     } else if (state === "Completed Bets") {
-      setShownBets(usersBets.filter((bet) => bet.paid_out === true));
+      setShownBets(
+        usersBets.filter((bet) => bet.paid_out === true && bet.paid_out == true)
+      );
       setShownState(state);
     }
   };
@@ -31,7 +47,37 @@ const UsersBets = ({ contract, currentUser }) => {
       const allUsersBets = await contract.get_bets_by_account({
         lookup_account: currentUser.accountId,
       });
-      console.log("test", allUsersBets);
+
+      const completedUsersBets = allUsersBets.filter(
+        (bet) => bet.paid_out === true && bet.paid_out == true
+      );
+
+      const winAmount = completedUsersBets.reduce((sum, bet) => {
+        return bet.winner === currentUser.accountId
+          ? sum +
+              parseInt(bet.better_deposit) +
+              parseInt(bet.market_maker_deposit)
+          : sum;
+      }, 0);
+
+      const wins = completedUsersBets.filter(
+        (bet) => bet.winner === currentUser.accountId
+      ).length;
+
+      const totalBets = completedUsersBets.length;
+      setUserTotalWins(wins);
+      setUsersTotalBets(totalBets);
+      setUserAmountWon(winAmount);
+
+      console.log(
+        formatNearAmount(
+          winAmount.toLocaleString("en-US", {
+            useGrouping: false,
+          })
+        ),
+        wins,
+        totalBets
+      );
 
       setUsersBets(allUsersBets);
     };
@@ -42,6 +88,24 @@ const UsersBets = ({ contract, currentUser }) => {
     const newUsersBets = usersBets.filter((bet) => bet.id !== betId);
     setUsersBets(newUsersBets);
     await contract.cancel_bet({ id: betId });
+  };
+
+  const payoutBet = async (gameId, gameDate, betId) => {
+    const data = await fetch(
+      `https://data.nba.net/10s/prod/v1/${gameDate}/${gameId}_mini_boxscore.json`
+    )
+      .then((res) => res.json())
+      .then((data) => data.basicGameData);
+    const winningTeam =
+      parseInt(data.hTeam.score) > parseInt(data.vTeam.score)
+        ? data.hTeam.triCode
+        : data.vTeam.triCode;
+
+    await contract.payout_bet({
+      id: betId,
+      winning_team: winningTeam,
+      status_num: data.statusNum,
+    });
   };
 
   const acceptBet = async (betId, deposit) => {
@@ -97,6 +161,8 @@ const UsersBets = ({ contract, currentUser }) => {
               key={bet.id}
               acceptBet={acceptBet}
               cancelBet={cancelBet}
+              payoutBet={payoutBet}
+              currentUser={currentUser}
             />
           ))}
         </div>

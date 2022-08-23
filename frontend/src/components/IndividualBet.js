@@ -8,14 +8,20 @@ const {
   },
 } = nearAPI;
 
-const IndividualBet = ({ bet, acceptBet, cancelBet }) => {
+const IndividualBet = ({
+  bet,
+  acceptBet,
+  cancelBet,
+  payoutBet,
+  currentUser,
+}) => {
   const parseTeams = (gameUrlCode) => {
     const teamsString = gameUrlCode.split("/")[1];
     return { vTeam: teamsString.slice(0, 3), hTeam: teamsString.slice(3, 6) };
   };
 
   const startTimeUtc = new Date(bet.start_time_utc);
-
+  console.log(bet);
   return (
     <div
       key={bet.id}
@@ -100,7 +106,7 @@ const IndividualBet = ({ bet, acceptBet, cancelBet }) => {
             </button>
           </div>
         )}
-        {cancelBet && (
+        {cancelBet && bet.better_found == false && (
           <div className="flex flex-col text-start">
             <button
               className={
@@ -112,7 +118,7 @@ const IndividualBet = ({ bet, acceptBet, cancelBet }) => {
             </button>
           </div>
         )}
-        {cancelBet && (
+        {cancelBet && bet.better_found == false && (
           <div className="flex flex-col text-start">
             <button
               className={
@@ -122,6 +128,34 @@ const IndividualBet = ({ bet, acceptBet, cancelBet }) => {
             >
               Accept Bet
             </button>
+          </div>
+        )}
+        {bet.paid_out === false && bet.better_found === true && (
+          <div className="flex flex-col">
+            <button
+              className={
+                "m-1 rounded bg-blue-500 py-2 text-center text-white hover:bg-blue-700"
+              }
+              onClick={() => payoutBet(bet.game_id, bet.game_date, bet.id)}
+            >
+              Payout Bet
+            </button>
+          </div>
+        )}
+        {bet.paid_out === true && bet.better_found === true && (
+          <div className="col-span-2">
+            <p
+              className={`m-1 rounded py-2 text-center text-white ${
+                bet.winner === currentUser.accountId
+                  ? "bg-green-700"
+                  : "bg-red-700"
+              }`}
+              onClick={() => payoutBet(bet.game_id, bet.game_date, bet.id)}
+            >
+              {bet.winner === currentUser.accountId
+                ? "You won this bet!"
+                : "You lost this bet."}
+            </p>
           </div>
         )}
       </div>

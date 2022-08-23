@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 const SEASON:&str = "2021";
 
-const NBA_TEAMS: &'static [&'static str] = &["ATL", "BOS", "BKN", "CHA", "CHI", "CLE", "DAL", "DEN", "DET", "GSW", "HOU", "IND", "LAC", "LAL", "MEM", "MIA", "MIL", "MIN", "NOP", "NYK", "OKC", "ORL", "PHI", "PHO", "POR", "SAC", "SAS", "TOR", "UTA", "WAS"];
+const NBA_TEAMS: &'static [&'static str] = &["ATL", "BOS", "BKN", "CHA", "CHI", "CLE", "DAL", "DEN", "DET", "GSW", "HOU", "IND", "LAC", "LAL", "MEM", "MIA", "MIL", "MIN", "NOP", "NYK", "OKC", "ORL", "PHI", "PHX", "POR", "SAC", "SAS", "TOR", "UTA", "WAS"];
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize, Clone, Debug)]
@@ -141,9 +141,13 @@ impl NBABetsDate {
 
     // Make private eventually but make a for loop to iterate through all bets.
     // This function needs to be reviewed. I think we can make this more efficient.
-    pub fn payout_bet(&mut self, id: i64, winning_team: String) {
+    #[payable]
+    pub fn payout_bet(&mut self, id: i64, winning_team: String, status_num: u8) {
         let mut bet = self.get_bet_by_id(id);
-        assert!(bet.paid_out == false, "This bet as already been paid out.");
+        // Assert game date has passed
+        assert!(bet.paid_out == false, "This bet has already been paid out.");
+        assert!(status_num == 3, "Game has not finished yet.");
+        assert!(NBA_TEAMS.contains(&winning_team.as_str()), "Team not found.");
         let market_maker_deposit = bet.market_maker_deposit.0;
         let mut better_deposit = 0;
         if bet.better_found == true {
@@ -315,7 +319,7 @@ mod tests {
         contract.create_bet(ntoy(5).into(),"0022100488".to_string(), "20211225".to_string(), "ATL".to_string(), "NYK".to_string(), "2021-12-25T17:00:00.000Z".to_string(), "20211225/ATLNYK".to_string());
         // Boston (1610612738) vs Milwaukee (1610612749)
         contract.create_bet(ntoy(10).into(),"0022100489".to_string(), "20211225".to_string(), "BOS".to_string(), "MIL".to_string(), "2021-12-25T17:30:00.000Z".to_string(), "20211225/BOSMIL".to_string());
-        // println!("{:?}", contract.get_all_bets());
+
         let bets =  contract.get_all_bets();
   
         assert_eq!(bets[0].game_id, "0022100488".to_string());
@@ -395,7 +399,6 @@ mod tests {
         testing_env!(context_better.clone());
         contract.accept_bet_index(0);
         contract.get_bets_by_account("boris.testnet".to_string());
-        println!("print: {:#?}", contract.get_bets_by_account("boris.testnet".to_string()));
 
     }
 
@@ -431,7 +434,7 @@ mod tests {
         testing_env!(context_better.clone());
         contract.accept_bet_index(0);
 
-        contract.payout_bet(0, "ATL".to_string());
+        contract.payout_bet(0, "ATL".to_string(), 3);
         // assert_eq!(contract.get_bet_by_index(0).paid_out, true);
     }
 

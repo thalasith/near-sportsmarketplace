@@ -36,6 +36,7 @@ const GameBets = ({ contract }) => {
     vTeamRecord: "",
     gameEnded: false,
     gameStarted: false,
+    statusNum: 1,
   });
   const [gameBets, setGameBets] = useState([]);
   const [gameBetsShown, setGameBetsShown] = useState([]);
@@ -73,6 +74,7 @@ const GameBets = ({ contract }) => {
         vTeamRecord:
           game.basicGameData.vTeam.win + "-" + game.basicGameData.vTeam.loss,
         gameUrlCode: game.basicGameData.gameUrlCode,
+        statusNum: game.statusNum,
       });
 
       if (game.basicGameData.isGameActivated === true) {
@@ -97,6 +99,7 @@ const GameBets = ({ contract }) => {
           vTeamRecord:
             game.basicGameData.vTeam.win + "-" + game.basicGameData.vTeam.loss,
           gameUrlCode: game.basicGameData.gameUrlCode,
+          statusNum: game.statusNum,
         });
       }
       if (new Date(game.basicGameData.endTimeUTC) < new Date()) {
@@ -122,6 +125,7 @@ const GameBets = ({ contract }) => {
           gameEnded: true,
           gameStarted: true,
           gameUrlCode: game.basicGameData.gameUrlCode,
+          statusNum: game.statusNum,
         });
       }
 
