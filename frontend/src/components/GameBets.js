@@ -17,33 +17,18 @@ const GameBets = ({ contract }) => {
   const { width } = useWindowDimensions();
   const [showOpenBets, setShowOpenBets] = useState(true);
   const [gameData, setGameData] = useState({
-    gameId: gameId,
-    gameDate: gameDate,
-    startTimeUTC: new Date().toISOString(),
+    startTimeUTC: "",
     hTeamTriCode: "",
     vTeamTriCode: "",
-    hTeamScore: "",
-    vTeamScore: "",
-    hTeamQ1Score: "",
-    hTeamQ2Score: "",
-    hTeamQ3Score: "",
-    hTeamQ4Score: "",
-    vTeamQ1Score: "",
-    vTeamQ2Score: "",
-    vTeamQ3Score: "",
-    vTeamQ4Score: "",
-    hTeamRecord: "",
-    vTeamRecord: "",
-    gameEnded: false,
+    hTeamScore: 0,
+    vTeamScore: 0,
     gameStarted: false,
-    statusNum: 1,
+    gameEnded: false,
   });
   const [gameBets, setGameBets] = useState([]);
   const [gameBetsShown, setGameBetsShown] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [parent] = useAutoAnimate(/* optional config */);
-
-  console.log(gameBets);
 
   const handleModalClose = () => {
     setModalVisible(false);
@@ -52,80 +37,36 @@ const GameBets = ({ contract }) => {
   useEffect(() => {
     const handleInit = async () => {
       const game = await fetch(
-        `https://data.nba.net/10s/prod/v1/${gameDate}/${gameId}_boxscore.json`
+        `https://www.balldontlie.io/api/v1/games/${gameId}`
       ).then((res) => res.json());
+      console.log(game);
       setGameData({
         ...gameData,
-        startTimeUTC: game.basicGameData.startTimeUTC,
-        hTeamTriCode: game.basicGameData.hTeam.triCode,
-        vTeamTriCode: game.basicGameData.vTeam.triCode,
-        hTeamScore: game.basicGameData.hTeam.score,
-        vTeamScore: game.basicGameData.vTeam.score,
-        hTeamQ1Score: game.basicGameData.hTeam.linescore[0].score,
-        hTeamQ2Score: game.basicGameData.hTeam.linescore[1].score,
-        hTeamQ3Score: game.basicGameData.hTeam.linescore[2].score,
-        hTeamQ4Score: game.basicGameData.hTeam.linescore[3].score,
-        vTeamQ1Score: game.basicGameData.vTeam.linescore[0].score,
-        vTeamQ2Score: game.basicGameData.vTeam.linescore[1].score,
-        vTeamQ3Score: game.basicGameData.vTeam.linescore[2].score,
-        vTeamQ4Score: game.basicGameData.vTeam.linescore[3].score,
-        hTeamRecord:
-          game.basicGameData.hTeam.win + "-" + game.basicGameData.hTeam.loss,
-        vTeamRecord:
-          game.basicGameData.vTeam.win + "-" + game.basicGameData.vTeam.loss,
-        gameUrlCode: game.basicGameData.gameUrlCode,
-        statusNum: game.statusNum,
+        startTimeUTC: game.status,
+        hTeamTriCode: game.home_team.abbreviation,
+        vTeamTriCode: game.visitor_team.abbreviation,
+        hTeamScore: game.home_team_score,
+        vTeamScore: game.visitor_team_score,
       });
 
       if (game.basicGameData.isGameActivated === true) {
         setGameData({
           ...gameData,
-          startTimeUTC: game.basicGameData.startTimeUTC,
-          gameStarted: true,
-          hTeamTriCode: game.basicGameData.hTeam.triCode,
-          vTeamTriCode: game.basicGameData.vTeam.triCode,
-          hTeamScore: game.basicGameData.hTeam.score,
-          vTeamScore: game.basicGameData.vTeam.score,
-          hTeamQ1Score: game.basicGameData.hTeam.linescore[0].score,
-          hTeamQ2Score: game.basicGameData.hTeam.linescore[1].score,
-          hTeamQ3Score: game.basicGameData.hTeam.linescore[2].score,
-          hTeamQ4Score: game.basicGameData.hTeam.linescore[3].score,
-          vTeamQ1Score: game.basicGameData.vTeam.linescore[0].score,
-          vTeamQ2Score: game.basicGameData.vTeam.linescore[1].score,
-          vTeamQ3Score: game.basicGameData.vTeam.linescore[2].score,
-          vTeamQ4Score: game.basicGameData.vTeam.linescore[3].score,
-          hTeamRecord:
-            game.basicGameData.hTeam.win + "-" + game.basicGameData.hTeam.loss,
-          vTeamRecord:
-            game.basicGameData.vTeam.win + "-" + game.basicGameData.vTeam.loss,
-          gameUrlCode: game.basicGameData.gameUrlCode,
-          statusNum: game.statusNum,
+          startTimeUTC: game.status,
+          hTeamTriCode: game.home_team.abbreviation,
+          vTeamTriCode: game.visitor_team.abbreviation,
+          hTeamScore: game.home_team_score,
+          vTeamScore: game.visitor_team_score,
         });
       }
       if (new Date(game.basicGameData.endTimeUTC) < new Date()) {
         setGameData({
           ...gameData,
-          startTimeUTC: game.basicGameData.startTimeUTC,
-          hTeamTriCode: game.basicGameData.hTeam.triCode,
-          vTeamTriCode: game.basicGameData.vTeam.triCode,
-          hTeamScore: game.basicGameData.hTeam.score,
-          vTeamScore: game.basicGameData.vTeam.score,
-          hTeamQ1Score: game.basicGameData.hTeam.linescore[0].score,
-          hTeamQ2Score: game.basicGameData.hTeam.linescore[1].score,
-          hTeamQ3Score: game.basicGameData.hTeam.linescore[2].score,
-          hTeamQ4Score: game.basicGameData.hTeam.linescore[3].score,
-          vTeamQ1Score: game.basicGameData.vTeam.linescore[0].score,
-          vTeamQ2Score: game.basicGameData.vTeam.linescore[1].score,
-          vTeamQ3Score: game.basicGameData.vTeam.linescore[2].score,
-          vTeamQ4Score: game.basicGameData.vTeam.linescore[3].score,
-          hTeamRecord:
-            game.basicGameData.hTeam.win + "-" + game.basicGameData.hTeam.loss,
-          vTeamRecord:
-            game.basicGameData.vTeam.win + "-" + game.basicGameData.vTeam.loss,
-          gameEnded: true,
-          gameStarted: true,
-          gameUrlCode: game.basicGameData.gameUrlCode,
-          statusNum: game.statusNum,
+          startTimeUTC: game.status,
+          hTeamTriCode: game.home_team.abbreviation,
+          vTeamTriCode: game.visitor_team.abbreviation,
+          hTeamScore: game.home_team_score,
+          vTeamScore: game.visitor_team_score,
         });
       }
 
@@ -162,7 +103,7 @@ const GameBets = ({ contract }) => {
   return (
     <div className="flex w-full flex-col items-center" ref={parent}>
       <div className="flex w-11/12 flex-row items-center bg-gray-200 py-2 lg:w-7/12 ">
-        <div className="basis-1/2 pr-2 lg:basis-1/3">
+        <div className="basis-1/2 pr-2">
           <p
             className={`float-right text-2xl text-gray-500 ${
               parseInt(gameData.hTeamScore) < parseInt(gameData.vTeamScore) &&
@@ -175,7 +116,7 @@ const GameBets = ({ contract }) => {
             )}
           </p>
           <img
-            src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${gameData.vTeamTriCode.toLocaleLowerCase()}.png`}
+            src={`/teams/${gameData.vTeamTriCode.toLocaleLowerCase()}.png`}
             alt={`${gameData.vTeamTriCode} Team Logo`}
             width="50"
             className="float-right"
@@ -186,46 +127,10 @@ const GameBets = ({ contract }) => {
                 ? getTeamFormatter(gameData.vTeamTriCode)
                 : gameData.vTeamTriCode}
             </p>
-            <p className="float-right text-sm">{gameData.vTeamRecord}</p>
           </div>
         </div>
-        {width > 768 && (
-          <div className="flex basis-1/5 flex-col items-center px-2">
-            <p>{gameData.gameEnded ? "Final" : "Not Final"}</p>
-            <table className="table-auto border-collapse border-gray-400 text-sm">
-              <thead className="border-b-1 border border-l-0  border-t-0 border-r-0  border-gray-400">
-                <tr>
-                  <th className="lg:pr-24"></th>
-                  <th className="font-normal lg:px-4 ">1</th>
-                  <th className="font-normal lg:px-4 ">2</th>
-                  <th className="font-normal lg:px-4 ">3</th>
-                  <th className="font-normal lg:px-4 ">4</th>
-                  <th className="text-center">T</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{gameData.vTeamTriCode}</td>
-                  <td className="text-center">{gameData.vTeamQ1Score}</td>
-                  <td className="text-center">{gameData.vTeamQ2Score}</td>
-                  <td className="text-center">{gameData.vTeamQ3Score}</td>
-                  <td className="text-center">{gameData.vTeamQ4Score}</td>
-                  <td className="text-center">{gameData.vTeamScore}</td>
-                </tr>
-                <tr>
-                  <td>{gameData.hTeamTriCode}</td>
-                  <td className="text-center">{gameData.hTeamQ1Score}</td>
-                  <td className="text-center">{gameData.hTeamQ2Score}</td>
-                  <td className="text-center">{gameData.hTeamQ3Score}</td>
-                  <td className="text-center">{gameData.hTeamQ4Score}</td>
-                  <td className="text-center">{gameData.hTeamScore}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        )}
 
-        <div className="basis-1/2 pl-2 lg:basis-1/3">
+        <div className="basis-1/2 pl-2">
           <p
             className={`float-left text-2xl text-gray-500 ${
               parseInt(gameData.hTeamScore) > parseInt(gameData.vTeamScore) &&
@@ -238,7 +143,7 @@ const GameBets = ({ contract }) => {
             {gameData.hTeamScore}
           </p>
           <img
-            src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${gameData.hTeamTriCode.toLocaleLowerCase()}.png`}
+            src={`/teams/${gameData.hTeamTriCode.toLocaleLowerCase()}.png`}
             alt={`${gameData.hTeamTriCode} Team Logo`}
             width="50"
             className="float-left"
@@ -249,7 +154,6 @@ const GameBets = ({ contract }) => {
                 ? getTeamFormatter(gameData.hTeamTriCode)
                 : gameData.hTeamTriCode}
             </p>
-            <p className="float-left text-sm">{gameData.hTeamRecord}</p>
           </div>
         </div>
       </div>

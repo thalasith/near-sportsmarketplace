@@ -20,16 +20,9 @@ const monthNames = [
 ];
 
 const date_to_string = (date) => {
-  const year = date.getFullYear().toString();
-  const month =
-    date.getMonth() < 9
-      ? "0" + (date.getMonth() + 1).toString()
-      : (date.getMonth() + 1).toString();
-  const day =
-    date.getDate() < 9
-      ? "0" + (date.getDate() + 1).toString()
-      : date.getDate().toString();
-  return year + month + day;
+  return (
+    date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+  );
 };
 
 const Games = () => {
@@ -44,12 +37,14 @@ const Games = () => {
 
       setShownDates(dates);
       const games = await fetch(
-        `https://data.nba.net/10s/prod/v1/${date_to_string(
+        `https://www.balldontlie.io/api/v1/games?dates[]=${date_to_string(
           shownDay
-        )}/scoreboard.json`
+        )}`
       ).then((res) => res.json());
-      setShownGames(games.games);
+
+      setShownGames(games.data);
     };
+
     handleInit();
   }, [shownDay]);
 
@@ -65,9 +60,11 @@ const Games = () => {
     setShownDay(date);
     setShownDates(nextWeek(date));
     const games = await fetch(
-      `https://data.nba.net/10s/prod/v1/${date_to_string(date)}/scoreboard.json`
+      `https://www.balldontlie.io/api/v1/games?dates[]=${date_to_string(
+        shownDay
+      )}`
     ).then((res) => res.json());
-    setShownGames(games.games);
+    setShownGames(games.data);
   };
 
   const handlePreviousWeek = () => {
@@ -132,13 +129,13 @@ const Games = () => {
         {shownGames.map((game) => {
           return (
             <GameButton
-              key={game.gameId}
-              gameId={game.gameId}
-              gameDate={game.homeStartDate}
-              hTeam={game.hTeam.triCode}
-              vTeam={game.vTeam.triCode}
-              hTeamScore={game.hTeam.score}
-              vTeamScore={game.vTeam.score}
+              key={game.id}
+              gameId={game.id}
+              gameDate={game.date.slice(0, 10)}
+              hTeam={game.home_team.abbreviation}
+              vTeam={game.visitor_team.abbreviation}
+              hTeamScore={game.home_team_score}
+              vTeamScore={game.visitor_team_score}
             />
           );
         })}

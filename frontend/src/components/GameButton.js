@@ -17,7 +17,7 @@ const GameButton = ({
       >
         <div className="w-5/8 float-left pl-2 pt-1">
           <img
-            src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${vTeam.toLowerCase()}.png`}
+            src={`/teams/${vTeam.toLowerCase()}.png`}
             alt={`${vTeam} Team Logo`}
             width="25"
             className="float-left"
@@ -38,7 +38,7 @@ const GameButton = ({
         </div>
         <div className="w-5/8 float-left pl-2 pb-1">
           <img
-            src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${hTeam.toLowerCase()}.png`}
+            src={`/teams/${hTeam.toLowerCase()}.png`}
             alt={`${hTeam} Team Logo`}
             width="25"
             className="float-left"
