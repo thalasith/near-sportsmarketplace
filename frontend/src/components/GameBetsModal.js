@@ -74,7 +74,7 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
               onClick={() => handleTeamSelection(gameData.vTeamTriCode)}
             >
               <img
-                src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${gameData.vTeamTriCode.toLowerCase()}.png`}
+                src={`/teams/${gameData.vTeamTriCode.toLowerCase()}.png`}
                 alt={`${gameData.vTeamTriCode} Team Logo`}
                 width="100"
                 className="float-left"
@@ -94,7 +94,7 @@ const GameBetsModal = ({ visible, onClose, contract, gameData }) => {
               onClick={() => handleTeamSelection(gameData.hTeamTriCode)}
             >
               <img
-                src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${gameData.hTeamTriCode.toLowerCase()}.png`}
+                src={`/teams/${gameData.hTeamTriCode.toLowerCase()}.png`}
                 alt={`${gameData.hTeamTriCode} Team Logo`}
                 width="100"
                 className="float-left"
