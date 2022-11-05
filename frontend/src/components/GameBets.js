@@ -17,6 +17,7 @@ const GameBets = ({ contract }) => {
   const { width } = useWindowDimensions();
   const [showOpenBets, setShowOpenBets] = useState(true);
   const [gameData, setGameData] = useState({
+    gameId: "",
     startTimeUTC: "",
     hTeamTriCode: "",
     vTeamTriCode: "",
@@ -42,33 +43,37 @@ const GameBets = ({ contract }) => {
       console.log(game);
       setGameData({
         ...gameData,
+        gameId: game.id.toString(),
+        gameDate: game.date,
+        start_time_utc: game.status,
         startTimeUTC: game.status,
         hTeamTriCode: game.home_team.abbreviation,
         vTeamTriCode: game.visitor_team.abbreviation,
         hTeamScore: game.home_team_score,
         vTeamScore: game.visitor_team_score,
+        gameUrlCode: game.id.toString(),
       });
 
-      if (game.basicGameData.isGameActivated === true) {
-        setGameData({
-          ...gameData,
-          startTimeUTC: game.status,
-          hTeamTriCode: game.home_team.abbreviation,
-          vTeamTriCode: game.visitor_team.abbreviation,
-          hTeamScore: game.home_team_score,
-          vTeamScore: game.visitor_team_score,
-        });
-      }
-      if (new Date(game.basicGameData.endTimeUTC) < new Date()) {
-        setGameData({
-          ...gameData,
-          startTimeUTC: game.status,
-          hTeamTriCode: game.home_team.abbreviation,
-          vTeamTriCode: game.visitor_team.abbreviation,
-          hTeamScore: game.home_team_score,
-          vTeamScore: game.visitor_team_score,
-        });
-      }
+      // if (game.basicGameData.isGameActivated === true) {
+      //   setGameData({
+      //     ...gameData,
+      //     startTimeUTC: game.status,
+      //     hTeamTriCode: game.home_team.abbreviation,
+      //     vTeamTriCode: game.visitor_team.abbreviation,
+      //     hTeamScore: game.home_team_score,
+      //     vTeamScore: game.visitor_team_score,
+      //   });
+      // }
+      // if (new Date(game.basicGameData.endTimeUTC) < new Date()) {
+      //   setGameData({
+      //     ...gameData,
+      //     startTimeUTC: game.status,
+      //     hTeamTriCode: game.home_team.abbreviation,
+      //     vTeamTriCode: game.visitor_team.abbreviation,
+      //     hTeamScore: game.home_team_score,
+      //     vTeamScore: game.visitor_team_score,
+      //   });
+      // }
 
       const allOpenBets = await contract.get_bets_by_game_id({
         game_id: gameId,
@@ -209,6 +214,8 @@ const GameBets = ({ contract }) => {
             key={bet.id}
             gameData={gameData}
             acceptBet={acceptBet}
+            hTeam={gameData.hTeamTriCode}
+            vTeam={gameData.vTeamTriCode}
           />
         ))}
       </div>

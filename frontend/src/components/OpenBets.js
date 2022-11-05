@@ -17,6 +17,7 @@ const OpenBets = ({ currentUser, contract }) => {
       setOpenBets(allOpenBets);
     };
     getBets();
+    console.log("openBets", openBets);
   }, [contract, currentUser]);
 
   const acceptBet = async (betId, deposit) => {

@@ -22,6 +22,8 @@ const UsersBets = ({ contract, currentUser }) => {
   const [userTotalWins, setUserTotalWins] = useState(0);
   const [usersTotalBets, setUsersTotalBets] = useState(0);
   const [userAmountWon, setUserAmountWon] = useState(0);
+  console.log("usersBets", usersBets);
+  console.log(shownBets);
 
   const handleStateChange = (state) => {
     if (state === "Open Bets") {

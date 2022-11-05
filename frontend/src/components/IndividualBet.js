@@ -14,12 +14,9 @@ const IndividualBet = ({
   cancelBet,
   payoutBet,
   currentUser,
+  hTeam,
+  vTeam,
 }) => {
-  const parseTeams = (gameUrlCode) => {
-    const teamsString = gameUrlCode.split("/")[1];
-    return { vTeam: teamsString.slice(0, 3), hTeam: teamsString.slice(3, 6) };
-  };
-
   const startTimeUtc = new Date(bet.start_time_utc);
 
   return (
@@ -31,27 +28,27 @@ const IndividualBet = ({
         <p>
           <span
             className={`${
-              bet.better_team === parseTeams(bet.game_url_code).vTeam
+              bet.better_team === vTeam
                 ? "font-bold text-black"
                 : "text-gray-700"
             }`}
           >
-            {parseTeams(bet.game_url_code).vTeam}
+            {vTeam}
           </span>{" "}
           vs{" "}
           <span
             className={`${
-              bet.better_team === parseTeams(bet.game_url_code).hTeam
+              bet.better_team === hTeam
                 ? "font-bold text-black"
                 : "text-gray-700"
             }`}
           >
-            {parseTeams(bet.game_url_code).hTeam}
+            {hTeam}
           </span>
         </p>
         <p>Tip Off: {formatDate(startTimeUtc)}</p>
         <img
-          src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${bet.better_team.toLocaleLowerCase()}.png`}
+          src={`/teams/${bet.better_team.toLocaleLowerCase()}.png`}
           alt={`${bet.better_team} Team Logo`}
           width="75"
           className=""
