@@ -26,7 +26,7 @@ const date_to_string = (date) => {
 };
 
 const Games = () => {
-  const [shownDay, setShownDay] = useState(new Date("2021-12-25T01:24:00"));
+  const [shownDay, setShownDay] = useState(new Date());
   const [shownDates, setShownDates] = useState([]);
   const [shownGames, setShownGames] = useState([]);
   const [parent] = useAutoAnimate(/* optional config */);
@@ -41,7 +41,7 @@ const Games = () => {
           shownDay
         )}`
       ).then((res) => res.json());
-
+      console.log(games);
       setShownGames(games.data);
     };
 
@@ -136,6 +136,7 @@ const Games = () => {
               vTeam={game.visitor_team.abbreviation}
               hTeamScore={game.home_team_score}
               vTeamScore={game.visitor_team_score}
+              status={game.status}
             />
           );
         })}

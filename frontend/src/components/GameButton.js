@@ -8,7 +8,10 @@ const GameButton = ({
   vTeam,
   hTeamScore,
   vTeamScore,
+  status,
 }) => {
+  const date = new Date(gameDate);
+  // console.log(Date.parse(new Date()));
   const GameDiv = () => {
     return (
       <a
@@ -60,12 +63,12 @@ const GameButton = ({
     );
   };
 
-  const GamePostponed = () => {
+  const GameNotStarted = () => {
     return (
       <div className="mx-2 my-2 grid w-48 grid-cols-2 grid-rows-2 rounded hover:bg-gray-200">
         <div className="w-5/8 float-left pl-2 pt-1">
           <img
-            src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${hTeam.toLowerCase()}.png`}
+            src={`/teams/${hTeam.toLowerCase()}.png`}
             alt={`${hTeam} Team Logo`}
             width="25"
             className="float-left"
@@ -73,12 +76,12 @@ const GameButton = ({
           {hTeam}
         </div>
 
-        <div className="w-2/8 row-span-2 my-auto pr-2 pt-1 text-right">
-          Postponed
+        <div className="w-2/8 row-span-2 my-auto pr-2 pt-1 text-right text-sm">
+          Tip Off: <br /> <span className="font-bold">{status}</span>
         </div>
         <div className="w-5/8 float-left pl-2 pb-1">
           <img
-            src={`http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/${vTeam.toLowerCase()}.png`}
+            src={`/teams/${vTeam.toLowerCase()}.png`}
             alt={`${vTeam} Team Logo`}
             width="25"
             className="float-left"
@@ -90,7 +93,9 @@ const GameButton = ({
   };
 
   return (
-    <div>{vTeamScore && hTeamScore ? <GameDiv /> : <GamePostponed />}</div>
+    <div>
+      {date + Date.parse(new Date()) < 0 ? <GameDiv /> : <GameNotStarted />}
+    </div>
   );
 };
 

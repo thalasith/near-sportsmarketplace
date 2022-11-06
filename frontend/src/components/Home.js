@@ -115,15 +115,6 @@ const Home = ({ currentUser, signIn }) => {
               <h2 className="text-2xl font-bold text-slate-700">
                 Become your own sportsbook in 3 easy steps.
               </h2>
-
-              {/* <video
-                width="750"
-                height="500"
-                className="flex flex-col items-center"
-                controls
-              >
-                <source src="/videos/bet_example.mp4" type="video/mp4" />
-              </video> */}
             </div>
             <div>
               <iframe
